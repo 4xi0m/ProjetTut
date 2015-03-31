@@ -1,0 +1,129 @@
+[Application::__construct]    		Test de typage - is_string($p_title) : true
+[Model::__construct]          		Test de typage - is_array($p_data) : true
+[View::__construct]           		Test de typage - $p_model instanceof Model || is_null($p_model) : true
+[Module::__construct]         		Test de typage - $p_model instanceof Model || is_null($p_model) : true
+[Module::__construct]         		Test de typage - $p_view instanceof View || is_null($p_view) : true
+[Block::__construct]          		Test de typage - is_array($p_settings) : true
+[Application::addBlock]       		Test de typage - $p_block instanceof Block : true
+[Application::addBlock]       		Test de précondition - $this->isRunning() == false : true
+[Application::addBlock]       		Test de précondition - in_array($p_block, $this->m_blocks, true) == false : true
+[Application::run]            		Test de typage - is_array($options) : true
+[Security::secure]            		Test de typage - is_string($variable) || is_array($variable) : true
+[Security::secure]            		Test de typage - is_string($variable) || is_array($variable) : true
+[View::generate]              		Test de typage - is_string($tabulations) : true
+[View::generate]              		Test de typage - is_array($errors) : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[View::add]                   		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+ue
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::__construct]            		Test de typage - is_string($p_tag) : true
+[Tag::__construct]            		Test de typage - is_array($p_attributes) : true
+[Tag::__construct]            		Test de typage - is_string($p_content) : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::add]                    		Test de typage - $p_component instanceof HTMLComponent : true
+[View::add]                   		Test de typage - $p_component instanceof HTMLComponent : true
+[Script::__construct]         		Test de typage - is_array($p_attributes) : true
+[View::add]                   		Test de typage - $p_component instanceof HTMLComponent : true
+[Script::__construct]         		Test de typage - is_array($p_attributes) : true
+[View::add]                   		Test de typage - $p_component instanceof HTMLComponent : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Script::generate]            		Test de typage - is_string($tabulations) : true
+[Script::generate]            		Test de typage - is_string($tabulations) : true
+     		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
+[Tag::generate]               		Test de typage - is_string($tabulations) : true
