@@ -100,7 +100,7 @@ app.get( '/api/:method', function ( objRequest, objResponse ){
                     //generate adding a new call request related query;
                     break;
                 default :
-                	console.log("no information");
+                    console.log("no information");
                     // We don't know how to handle this kind of CONTENT_TYPE so
                     // we simply want to blow it up right now
                     //sendError( objResponse, 503, 'error', 'content-type unkown', { code : 'CONTENT-TYPE MISMATCH' } );
