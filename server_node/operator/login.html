@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>OPERATOR</title>
+    </head>
+ 
+    <body>
+        <script src="socket.io.js"></script>
+        <script>
+             'use strict';
+            // Connexion à socket.io
+             var socket = io.connect("http://localhost:8181");
+
+            socket.on('ok', function()  {
+                alert('connecté');
+            });
+            
+            socket.on('log', function (array){
+                console.log.apply(console, array);
+            });
+        </script>
+    </body>
+</html>
