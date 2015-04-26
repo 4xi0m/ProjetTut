@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home page</title>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+
+	
+
+
+</head>
+
+
+<body>
+
+<h1>Hello <%=client.name %></h1>
+<form method="get" action="userDisconnection">
+	<button type="submit" class="btn btn-default">disconnect</button>
+</form>
+
+  <button class="btn btn-default" id="help">HELP</button>
+
+<p>do you want help ? </p>
+
+<div >
+    <table>
+      <tr>
+        <td>
+          <video id="localVideo" autoplay></video>
+        </td>
+        <td>
+          <video id="remoteVideo" autoplay></video>
+        </td>
+
+      </tr>
+      <tr>
+        <td align="center">
+
+
+          <button id="callButton">Call</button>
+
+          
+        </td>
+        <td>
+        </td>
+
+
+      </tr>
+
+    </table>  
+    <video autoplay></video>
+  </div>
+
+
+  <script src='js/lib/socket.io.js'></script>
+  <script src='js/lib/adapter.js'></script>
+  <script src="js/fullApp.js"></script>
+
+</body>
+</html>

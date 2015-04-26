@@ -1,0 +1,73 @@
+<html>
+<head>
+	<title>test ajax</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+</head>
+
+<body>
+
+<h1>Test ajax</h1>
+
+<button id="help"> HELP ! </button>
+
+
+<p id ="callstatus"></p>
+
+
+
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+	var timeout ;
+
+	$('#help').click(askforhelp);
+
+	function askforhelp (){
+		timeout = setInterval(sendAskforhelp, 3000);
+	}
+
+	function sendAskforhelp() {
+    $.ajax({
+        url: 'http://localhost:8000/needHelp',
+        dataType: "jsonp",
+        jsonpCallback: "_testcb",
+         contentType: 'application/json',
+        cache: false,
+        timeout: 2000,
+        success: function(data) {
+        	var json = JSON.parsedata));
+        	if(json.message == "wait" ){
+            	$('#callstatus').append("Our service are going to take car of your call <br> ");
+            }else if(json.message == "call"){
+            	clearInterval(timeout);
+            }else{
+            	clearInterval(timeout);
+            	alert("Failed : reload the page.");
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+        	clearInterval(timeout);
+            alert('error ' + textStatus + " " + errorThrown);
+
+        }
+    });
+	}
+
+});
+
+
+
+
+</script>
+
+
+
+</body>
+
+
+
+
+
+</html>

@@ -1,0 +1,31 @@
+<html>
+<head>
+	<title>Testing Angular</title>
+</head>
+<body>
+
+<h1>Testing hello express </h1>
+
+<%= new Date() %>
+
+<ul>
+	<% for (var i = 0 ; i <items.length ; i++){ %>
+
+		<li><%=items[i].desc%></li>
+
+	<% }%>
+
+</ul>
+
+<form action="/add" method="post">
+	<input type="text" name="main[newItem]">
+	<input type="submit">
+
+</form>
+
+
+</body>
+
+
+
+</html>
