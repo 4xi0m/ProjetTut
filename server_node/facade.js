@@ -172,7 +172,7 @@ app.get("/helpSomeone", function (req, res){
 /*-------------Startup----------------*/
 
 
-app.listen(8000, function (){
+var unicServer = app.listen(8000, function (){
 	console.log('ready on port 8000'.green);
 });
 
@@ -198,18 +198,22 @@ var webRTCapp = webRTChttp.createServer(function (req, res) {
 	file.serve(req, res);
 }).listen(8181);
 // Use socket.io JavaScript library for real-time web applications
-var io = require('socket.io').listen(webRTCapp);
+var io = require('socket.io').listen(unicServer);
 
+
+	
 
 
 // Let's start managing connections...
 io.sockets.on('connection', function (socket){
 	// Handle 'message' messages
+
+	console.log("Demande de connection "+socket)
 	socket.on('message', function (message) {
 		log('S --> got message: ', message);
 		// channel-only broadcast..
 		log('DEBUG >>>>>>>> '+message.channel);
-		socket.broadcast.to(channel).emit('message', message);//PB broadcast.to(channel....).to(message.channel)
+		socket.broadcast.emit('message', message);//PB broadcast.to(channel....).to(message.channel)
 	});
 
 
@@ -238,17 +242,22 @@ io.sockets.on('connection', function (socket){
 		}
 	});
 
-	socket.on('creat', function (room){
+
+
+	socket.on('create', function (room){
 		channel = room;
+		room = parseInt(room);
 		log('S --> Request to creat room', room);	
+
 		socket.join(room);
 		socket.emit('created', room);
 	});
 
-	socket.on('join', function (room){
+	socket.on('join server', function (room){
+		room = parseInt(room);
 		channel = room;
-		log('S --> Request to join room', room);
-		log('S --> Room ' + room + 'is now full');		
+		log('S --> Request to join room ', room);
+		log('S --> Room ' + room + ' is now full');		
 		io.sockets.in(room).emit('join', room);
 		socket.join(room);
 		socket.emit('joined', room);

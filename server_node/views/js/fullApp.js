@@ -78,7 +78,7 @@ var sdpConstraints = {};
 var constraints = {video: true, audio: true};
 
 // Connect to signaling server
-var socket = io.connect("http://localhost:8181");
+var socket = io.connect("http://localhost:8000");
 // Let's get started: prompt user for input (room name)
 var room;
 //var room = prompt('Enter room name:');
@@ -121,8 +121,12 @@ socket.on('log', function (array){
 	console.log.apply(console, array);
 });
 
-startButton.onclick = initCall;
 
+
+
+if (startButton){
+	startButton.onclick = initCall;
+}
 
 function initCall (){
 
@@ -134,7 +138,7 @@ function initCall (){
         timeout: 2000,
         success: function(data) { 
         	var json = JSON.parse(data);
-        	room = json.room;
+        	room = ''+json.room+'';
 
         	if (room !== '') {
 				console.log('Create', room);
@@ -161,10 +165,10 @@ function responceCall(roomcall){
         data:JSON.stringify(data),
         timeout: 2000,
         success: function(data) { 
-        	room = data.room;
+        	room = ''+roomcall+'';
         	if (room !== '') {
 				console.log('join', room);
-				socket.emit('join', room);
+				socket.emit('join server', room);
 			}
         	
         },
@@ -329,7 +333,7 @@ socket.on('created', function (room){
 	checkAndStart();
 });
 
-// Handle 'joined' message coming back from server:
+// Handle 'joined' message comin g back from server:
 // this is the second peer joining the channel
 socket.on('joined', function (room){
 	console.log('This peer has joined room ' + room);
