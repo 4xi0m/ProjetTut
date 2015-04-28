@@ -7,7 +7,7 @@
 #
 # Hôte: localhost (MySQL 5.6.23)
 # Base de données: WebRTC
-# Temps de génération: 2015-04-28 13:56:37 +0000
+# Temps de génération: 2015-04-28 14:00:29 +0000
 # ************************************************************
 
 
@@ -57,16 +57,16 @@ CREATE TABLE `User` (
   `email` varchar(100) NOT NULL DEFAULT '',
   `name` varchar(50) DEFAULT NULL,
   `firstName` varchar(50) DEFAULT NULL,
-  `authNum-NI` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `passphrase` varchar(100) NOT NULL DEFAULT '',
-  PRIMARY KEY (`authNum-NI`),
+  PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 LOCK TABLES `User` WRITE;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
 
-INSERT INTO `User` (`email`, `name`, `firstName`, `authNum-NI`, `passphrase`)
+INSERT INTO `User` (`email`, `name`, `firstName`, `id`, `passphrase`)
 VALUES
 	('abc@gmail.com','wang','yanchao',1,'simplepassword'),
 	('yanchaowang2@gmail.com','wang','yanchao',2,'123456'),
