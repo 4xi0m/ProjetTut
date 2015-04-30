@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>OPERATOR</title>
+    </head>
+ 
+    <body>
+        <h1>Control page</h1>
+
+
+        <!--  CONFERENCE PART   -->
+         <div >
+            <table>
+              <tr>
+                <td>
+                  <video id="localVideo" autoplay></video>
+                </td>
+                <td>
+                  <video id="remoteVideo" autoplay></video>
+                </td>
+
+              </tr>
+              <tr>
+                <td align="center">
+
+                  <button id="startButton">Start</button>
+                  <button id="callButton">Call</button>
+                  <button id="hangupButton">Hang Up</button>
+                  
+                </td>
+                <td>
+                </td>
+              </tr>
+                <tr>
+                    <td align="center">
+                        <textarea rows="4" cols="60" id="dataChannelSend" disabled placeholder="This will be enabled once the data channel is up..."></textarea>
+                    </td>
+                    <td align="center">
+                        <textarea rows="4" cols="60" id="dataChannelReceive" disabled></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <button id="sendButton" disabled>Send</button>
+                    </td>
+                    <td></td>
+                </tr>
+            </table>  
+
+          </div>
+
+
+
+        <!--  LIST OF PENDING CALLS -->
+        <table class="table" id="pendingCalls">
+        </table>
+
+
+
+        <script src="../scripts/adapter.js"></script>
+        <script src="../scripts/socket.io.js"></script>
+        <script src="../scripts/operator.js"></script>
+    </body>
+</html>
