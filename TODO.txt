@@ -2,3 +2,4 @@
 - Sessions management
 - DB using
 - CSS Design
+- Exceptions handling

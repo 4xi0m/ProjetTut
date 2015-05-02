@@ -9,13 +9,9 @@ var WebRTC = function()	{
 		constraints: {video: true, audio: true},
 		//	Streams
 		localStream: null,
+		//	RTCPeerConnection
 		pc: null,
-
 	};
-
-
-
-
 
 
 
@@ -24,15 +20,15 @@ var WebRTC = function()	{
 
 
 
-		getUserMedia: function(fn)	{
+		getUserMedia: function(successHandler)	{
 			navigator.getUserMedia(
 
 				private.constraints,
 
 				function(stream)	{
-					private.localStream = stream;
 					console.log('Adding local stream.');
-					fn(stream);
+					private.localStream = stream;
+					successHandler(stream);
 				},
 
 				function(error)	{
@@ -44,41 +40,25 @@ var WebRTC = function()	{
 
 
 
-		createPeerConnection: function(fn, ice)	{
-			private.pc = new RTCPeerConnection(private.pc_config, private.pc_constraints);
-			private.pc.addStream(private.localStream);
-			private.pc.onicecandidate = ice;
+		createPeerConnection: function(streamHandler, iceHandler)	{
 			console.log('Created RTCPeerConnnection with:\n' +
 			' config: \'' + JSON.stringify(private.pc_config) + '\';\n' +
 			' constraints: \'' + JSON.stringify(private.pc_constraints) + '\'.');
-			private.pc.onaddstream = fn;
+
+			private.pc = new RTCPeerConnection(private.pc_config, private.pc_constraints);
+			private.pc.addStream(private.localStream);
+			private.pc.onicecandidate = iceHandler;
+			private.pc.onaddstream = streamHandler;
 		},
 
 
 
-		createOffer: function(socket)	{
+		createOffer: function(successHandler)	{
 			private.pc.createOffer(
 
 				function(sessionDescription)	{
 					private.pc.setLocalDescription(sessionDescription);
-					socket.emit('offer', sessionDescription);
-				},
-
-				function(error)	{
-					console.log('Failed to create signaling message : ' + error.name);
-				}
-			);
-		},
-
-
-
-
-		createAnswer: function(socket)	{
-			private.pc.createAnswer(
-
-				function(sessionDescription)	{
-					private.pc.setLocalDescription(sessionDescription);
-					socket.emit('answer', sessionDescription);
+					successHandler(sessionDescription);
 				},
 
 				function(error)	{
@@ -89,9 +69,32 @@ var WebRTC = function()	{
 
 
 
-		processSession: function(sessionDescription)	{
+		createAnswer: function(successHandler)	{
+			private.pc.createAnswer(
+
+				function(sessionDescription)	{
+					private.pc.setLocalDescription(sessionDescription);
+					successHandler(sessionDescription);
+				},
+
+				function(error)	{
+					console.log('Failed to create signaling message : ' + error);
+				}
+			);
+		},
+
+
+
+		processOffer: function(sessionDescription)	{
 			private.pc.setRemoteDescription(new RTCSessionDescription(sessionDescription));
 		},
+
+
+
+		processAnswer: function(sessionDescription)	{
+			private.pc.setRemoteDescription(new RTCSessionDescription(sessionDescription));
+		},
+
 
 
 		addIceCandidate: function(ice)	{
@@ -100,7 +103,7 @@ var WebRTC = function()	{
 		}
 
 
-	}
+	};
 
 	return public;
 

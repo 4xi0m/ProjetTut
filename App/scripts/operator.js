@@ -1,28 +1,55 @@
 var socket = io.connect("http://localhost:8000");
 var rtc = new WebRTC();
 
-
-
-
 var localVideo = document.getElementById('localVideo');
 var remoteVideo = document.getElementById('remoteVideo');
 
 
 
-// ICE candidates management
-function handleIceCandidate(event) {
+/*
+ *
+ *	Events handlers
+ *
+ */
+
+function iceCandidateHandler(event) {
 	console.log('handleIceCandidate event: ', event);
 	if (event.candidate) {
-		socket.emit('ice', {
-			type: 'candidate',
+		socket.emit('iceCandidate', {
 			label: event.candidate.sdpMLineIndex,
-			id: event.candidate.sdpMid,
 			candidate: event.candidate.candidate
 		});
 	} else {
 		console.log('End of candidates.');
 	}
 }
+
+
+
+function streamHandler(event)	{
+	attachMediaStream(remoteVideo, event.stream);
+}
+
+
+
+function offerHelpHandler(client)	{
+	console.log('Help client', client);
+	rtc.getUserMedia(function(stream)	{
+		attachMediaStream(localVideo, stream);
+		rtc.createPeerConnection(streamHandler, iceCandidateHandler);
+		socket.emit('help', client);
+	});
+}
+
+
+
+function RTCOfferHandler(sessionDescription)	 {
+	rtc.processOffer(sessionDescription);
+	rtc.createAnswer(function(sessionDescription)	{
+		socket.emit('RTCAnswer', sessionDescription);
+	});	
+}
+
 
 
 function insertClient(client)	{
@@ -34,47 +61,17 @@ function insertClient(client)	{
 	tr.appendChild(td);
 	tr.appendChild(tdCall);
 	table.appendChild(tr);
-
-
-
-	document.getElementById(client).onclick = function()	{
-		console.log('Help client', client);
-		rtc.getUserMedia(function(stream)	{
-			attachMediaStream(localVideo, stream);
-			socket.emit('help', client);
-			rtc.createPeerConnection(function(event)	{
-				attachMediaStream(remoteVideo, event.stream);
-			}, handleIceCandidate);
-		});
-	};
+	document.getElementById(client).onclick = function()	{offerHelpHandler(client)};
 }
 
 
 
+socket.on('helpAsked', insertClient);
+socket.on('iceCandidate', rtc.addIceCandidate);
+socket.on('RTCOffer', RTCOfferHandler);
 
 
 
-socket.on('log', function (array){
-	console.log.apply(console, array);
-});
-
-
-
-socket.on('helpAsked', function (client){
-	insertClient(client);
-});
-
-
-socket.on('offer', function (sessionDescription){
-	rtc.processSession(sessionDescription);
-	rtc.createAnswer(socket);	
-});
-
-
-
-socket.on('ice', function (ice){
-		rtc.addIceCandidate(ice);
-});
 
 
 

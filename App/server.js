@@ -2,20 +2,19 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var io = require('socket.io');
 var app = express();
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
-})); 
+app.use(bodyParser.urlencoded({extended: true}));      // to support URL-encoded bodies
 app.use(express.static(__dirname + '/'));
 
 
 
+
+
 /*
+ *
+ *	ROUTING
+ *
+ */
 
-ROUTAGE
-
-
-
-*/
 app.get('/admin', function(req, res) {
     res.sendFile(__dirname+'/pages/operatorLogin.html');
 });
@@ -25,8 +24,6 @@ app.post('/admin', function(req, res) {
 		res.sendFile(__dirname+'/pages/operatorPage.html');
 	}
 });
-
-
 
 app.get('/client', function(req, res) {
     res.sendFile(__dirname+'/pages/clientLogin.html');
@@ -43,19 +40,12 @@ app.post('/client', function(req, res) {
 
 
 
-
-
-
-
-
 /*
+ *
+ *	WEBRTC
+ *
+ */
 
-
-WEBRTC
-
-
-
-*/
 io = io.listen(app.listen(8000));
 
 
@@ -64,60 +54,41 @@ io.sockets.on('connection', function (socket){
 	var room = '';
 
 
-
-
 	socket.on('askForHelp', function (client){
+		console.log('help asked');
 		room = client;
-		log('S --> Help asked ', room);
 		socket.join(room);
 		socket.broadcast.emit('helpAsked', room);
-
 	});
 
 
 
 	socket.on('help', function (client){
+		console.log('help offered');
 		room = client;
-		log('S --> Help offered ', room);
 		socket.join(room);
 		socket.in(room).emit('helpOffered', room);
-
 	});
 
 
-	socket.on('offer', function (sessionDescription){
-
-		log('S --> RTCSessionDescription offer sent ', sessionDescription);
-		socket.in(room).emit('offer', sessionDescription);
-
-	});
-
-
-
-	socket.on('answer', function (sessionDescription){
-
-		log('S --> RTCSessionDescription answer sent ', sessionDescription);
-		socket.in(room).emit('answer', sessionDescription);
-
-	});
-
-
-	socket.on('ice', function (ice){
-
-		log('S --> Ice candidate ', ice);
-		socket.in(room).emit('ice', ice);
-
+	socket.on('RTCOffer', function (sessionDescription){
+		console.log('RTC offer');
+		socket.in(room).emit('RTCOffer', sessionDescription);
 	});
 
 
 
-	function log(){
-		var array = [">>> "];
-		for (var i = 0; i < arguments.length; i++) {
-			array.push(arguments[i]);
-		}
-		socket.emit('log', array);
-	}
+	socket.on('RTCAnswer', function (sessionDescription){
+		console.log('RTC answer');
+		socket.in(room).emit('RTCAnswer', sessionDescription);
+	});
+
+
+	socket.on('iceCandidate', function (ice){
+		console.log('ice');
+		socket.in(room).emit('iceCandidate', ice);
+	});
+
 });
 
 

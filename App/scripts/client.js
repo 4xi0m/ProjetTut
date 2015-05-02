@@ -1,8 +1,6 @@
 var socket = io.connect('http://localhost:8000');
 var rtc = new WebRTC();
 
-
-
 var localVideo = document.getElementById('localVideo');
 var remoteVideo = document.getElementById('remoteVideo');
 var helpButton = document.getElementById('help');
@@ -10,20 +8,30 @@ var helpButton = document.getElementById('help');
 
 
 
-// ICE candidates management
-function handleIceCandidate(event) {
+/*
+ *
+ *	Events handlers
+ *
+ */
+
+function iceCandidateHandler(event) {
 	console.log('handleIceCandidate event: ', event);
 	if (event.candidate) {
-		socket.emit('ice', {
-			type: 'candidate',
+		socket.emit('iceCandidate', {
 			label: event.candidate.sdpMLineIndex,
-			id: event.candidate.sdpMid,
 			candidate: event.candidate.candidate
 		});
 	} else {
 		console.log('End of candidates.');
 	}
 }
+
+
+
+function streamHandler(event)	{
+	attachMediaStream(remoteVideo, event.stream);
+}
+
 
 
 function askForHelpHandler()	{
@@ -35,32 +43,19 @@ function askForHelpHandler()	{
 };
 
 
-helpButton.onclick = askForHelpHandler;
 
-
-
-
-
-socket.on('log', function (array){
-	console.log.apply(console, array);
-});
-
-
-socket.on('helpOffered', function (client){
+function helpOfferedHandler(client){
 	console.log('Help accepted', client);
-	rtc.createPeerConnection(function(event)	{
-		attachMediaStream(remoteVideo, event.stream);
-	}, handleIceCandidate);
-	rtc.createOffer(socket);
-});
+	rtc.createPeerConnection(streamHandler, iceCandidateHandler);
+	rtc.createOffer(function(sessionDescription)	{
+		socket.emit('RTCOffer', sessionDescription);
+	});
+}
 
 
 
-socket.on('answer', function (sessionDescription){
-	rtc.processSession(sessionDescription);
-});
 
-
-socket.on('ice', function (ice){
-		rtc.addIceCandidate(ice);
-});
+helpButton.onclick = askForHelpHandler;
+socket.on('helpOffered', helpOfferedHandler);
+socket.on('RTCAnswer', rtc.processAnswer);
+socket.on('iceCandidate', rtc.addIceCandidate);
