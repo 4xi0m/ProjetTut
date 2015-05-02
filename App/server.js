@@ -6,9 +6,6 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 })); 
 app.use(express.static(__dirname + '/'));
-var channel = null;
-var nb = 0;
-
 
 
 
@@ -64,54 +61,55 @@ io = io.listen(app.listen(8000));
 
 io.sockets.on('connection', function (socket){
 
+	var room = '';
+
+
+
+
 	socket.on('askForHelp', function (client){
-
-		log('S --> Help asked ', client);
-		socket.broadcast.emit('helpAsked', client);
+		room = client;
+		log('S --> Help asked ', room);
+		socket.join(room);
+		socket.broadcast.emit('helpAsked', room);
 
 	});
 
 
 
+	socket.on('help', function (client){
+		room = client;
+		log('S --> Help offered ', room);
+		socket.join(room);
+		socket.in(room).emit('helpOffered', room);
+
+	});
 
 
+	socket.on('offer', function (sessionDescription){
 
+		log('S --> RTCSessionDescription offer sent ', sessionDescription);
+		socket.in(room).emit('offer', sessionDescription);
 
-
-
-	// Handle 'message' messages
-	socket.on('message', function (message) {
-		log('S --> got message: ', message);
-		// channel-only broadcast..
-		log('DEBUG >>>>>>>> '+message.channel);
-		socket.broadcast.to(channel).emit('message', message);//PB broadcast.to(channel....).to(message.channel)
 	});
 
 
 
+	socket.on('answer', function (sessionDescription){
 
-	// Handle 'create or join' messages
-	socket.on('create or join', function (room) {
-		channel = room;
-		var numClients = nb;
-		log('S --> Room ' + room + ' has ' + numClients + ' client(s)');
-		log('S --> Request to create or join room', room);
-		// First client joining...
-		if (numClients == 0){
-			nb++;
-			socket.join(room);
-			socket.emit('created', room);
-		} else if (numClients == 1) {
-			nb++;
-			// Second client joining...
-			io.sockets.in(room).emit('join', room);
-			socket.join(room);
-			socket.emit('joined', room);
-		} else {
-			// max two clients
-			socket.emit('full', room);
-		}
+		log('S --> RTCSessionDescription answer sent ', sessionDescription);
+		socket.in(room).emit('answer', sessionDescription);
+
 	});
+
+
+	socket.on('ice', function (ice){
+
+		log('S --> Ice candidate ', ice);
+		socket.in(room).emit('ice', ice);
+
+	});
+
+
 
 	function log(){
 		var array = [">>> "];

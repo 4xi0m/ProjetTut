@@ -1,0 +1,4 @@
+- Garbage collector / cleanup functions
+- Sessions management
+- DB using
+- CSS Design

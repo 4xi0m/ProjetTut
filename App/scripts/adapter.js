@@ -4,6 +4,11 @@ var attachMediaStream = null;
 var reattachMediaStream = null;
 var webrtcDetectedBrowser = null;
 
+
+navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+
+
 function trace(text) {
   // This function is used for logging.
   if (text[text.length - 1] == '\n') {
