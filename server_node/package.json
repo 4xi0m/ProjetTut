@@ -21,7 +21,16 @@
 		"url" : "http://nopage.com"
 	},
 	"config" : {
-		"configArg" : "This is a config arg"
+		"server_hosting" : "localhost",
+		"server_hosting_port" : "8000",
+		"data_base" : {
+			"hosting" : "localhost",
+			"hosting_post": "",
+			"user_name" : "api",
+			"passphrase" : "api"
+		}
+		
+
 	},
 	"dependencies":
 	{
