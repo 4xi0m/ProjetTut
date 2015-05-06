@@ -1,7 +1,8 @@
 var compteur = 0;
-
+;
 var express = require('express');
 var sessions = require('express-session');
+var io = require('socket.io')
 var colors = require('colors');
 var app = express ();
 var bodyParser = require("body-parser");
@@ -185,92 +186,59 @@ var unicServer = app.listen(8000, function (){
 /*----------------------------------------------------------------------
 ---------------------------------WEBRTC---------------------------------
 ----------------------------------------------------------------------*/
-
-var webRTCstatic = require('node-static');
-var webRTChttp = require('http');
-// Create a node-static server instance
-var file = new(webRTCstatic.Server)();
-var channel = null;
-var nb = 0;
-// We use the http module’s createServer function and
-// rely on our instance of node-static to serve the files
-var webRTCapp = webRTChttp.createServer(function (req, res) {
-	file.serve(req, res);
-}).listen(8181);
-// Use socket.io JavaScript library for real-time web applications
-var io = require('socket.io').listen(unicServer);
+//code : Matthieu
 
 
-	
+/*TODO : 
+0)what is the 'client' filled ? what is it concretly? 
+
+1)What happends when a oppérator connects after client asked help
+2)Work on socket disconnection.
+3)Localy store the the in comming calls ?
 
 
-// Let's start managing connections...
+
+*/
+io = io.listen(unicServer);
+
+
 io.sockets.on('connection', function (socket){
-	// Handle 'message' messages
 
-	console.log("Demande de connection "+socket)
-	socket.on('message', function (message) {
-		log('S --> got message: ', message);
-		// channel-only broadcast..
-		log('DEBUG >>>>>>>> '+message.channel);
-		socket.broadcast.emit('message', message);//PB broadcast.to(channel....).to(message.channel)
-	});
+	var room = '';
 
 
-
-
-	// Handle 'create or join' messages
-	socket.on('create or join', function (room) {
-		channel = room;
-		var numClients = nb;
-		log('S --> Room ' + room + ' has ' + numClients + ' client(s)');
-		log('S --> Request to create or join room', room);
-		// First client joining...
-		if (numClients == 0){
-			nb++;
-			socket.join(room);
-			socket.emit('created', room);
-		} else if (numClients == 1) {
-			nb++;
-			// Second client joining...
-			io.sockets.in(room).emit('join', room);
-			socket.join(room);
-			socket.emit('joined', room);
-		} else {
-			// max two clients
-			socket.emit('full', room);
-		}
-	});
-
-
-
-	socket.on('create', function (room){
-		channel = room;
-		room = parseInt(room);
-		log('S --> Request to creat room', room);	
-
+	socket.on('askForHelp', function (client){
+		console.log('help asked');
+		room = client;  //<== want is this ?
 		socket.join(room);
-		socket.emit('created', room);
+		socket.broadcast.emit('helpAsked', room);
 	});
 
-	socket.on('join server', function (room){
-		room = parseInt(room);
-		channel = room;
-		log('S --> Request to join room ', room);
-		log('S --> Room ' + room + ' is now full');		
-		io.sockets.in(room).emit('join', room);
+
+
+	socket.on('help', function (client){
+		console.log('help offered');
+		room = client;
 		socket.join(room);
-		socket.emit('joined', room);
-
+		socket.in(room).emit('helpOffered', room);
 	});
 
 
-	function log(){
-		var array = [">>> "];
-		for (var i = 0; i < arguments.length; i++) {
-			array.push(arguments[i]);
-		}
-		socket.emit('log', array);
-	}
+	socket.on('RTCOffer', function (sessionDescription){
+		console.log('RTC offer'); 
+		socket.in(room).emit('RTCOffer', sessionDescription);//<== what is sessionDescription?
+	});
+
+
+	socket.on('RTCAnswer', function (sessionDescription){
+		console.log('RTC answer');
+		socket.in(room).emit('RTCAnswer', sessionDescription);
+	});
+
+
+	socket.on('iceCandidate', function (ice){
+		console.log('ice');
+		socket.in(room).emit('iceCandidate', ice);
+	});
+
 });
-
