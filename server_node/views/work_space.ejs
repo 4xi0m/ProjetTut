@@ -1,110 +1,66 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-	<title>Home page</title>
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-	<!-- Optional theme -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <head>
+        <meta charset="utf-8" />
+        <title>OPERATOR</title>
+    </head>
+ 
+    <body>
+        <h1>Control page</h1>
 
 
-	
+        <!--  CONFERENCE PART   -->
+         <div >
+            <table>
+              <tr>
+                <td>
+                  <video id="localVideo" autoplay></video>
+                </td>
+                <td>
+                  <video id="remoteVideo" autoplay></video>
+                </td>
+
+              </tr>
+              <tr>
+                <td align="center">
+
+                  <button id="startButton">Start</button>
+                  <button id="callButton">Call</button>
+                  <button id="hangupButton">Hang Up</button>
+                  
+                </td>
+                <td>
+                </td>
+              </tr>
+                <tr>
+                    <td align="center">
+                        <textarea rows="4" cols="60" id="dataChannelSend" disabled placeholder="This will be enabled once the data channel is up..."></textarea>
+                    </td>
+                    <td align="center">
+                        <textarea rows="4" cols="60" id="dataChannelReceive" disabled></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <button id="sendButton" disabled>Send</button>
+                    </td>
+                    <td></td>
+                </tr>
+            </table>  
+
+          </div>
 
 
-</head>
+
+        <!--  LIST OF PENDING CALLS -->
+        <table class="table" id="pendingCalls">
+        </table>
 
 
-<body>
 
-<h1>Hello <%=staff_member.name %></h1>
-<form method="get" action="userDisconnection">
-	<button type="submit" class="btn btn-default">disconnect</button>
-</form>
-<p>You have work to do</p>
-
- <div >
-    <table>
-      <tr>
-        <td>
-          <video id="localVideo" autoplay></video>
-        </td>
-        <td>
-          <video id="remoteVideo" autoplay></video>
-        </td>
-
-      </tr>
-      <tr>
-        <td align="center">
-
-          <button id="startButton">Start</button>
-          <button id="callButton">Call</button>
-          <button id="hangupButton">Hang Up</button>
-          
-        </td>
-        <td>
-        </td>
-
-
-      </tr>
-
-    </table>  
-    <video autoplay></video>
-  </div>
-
-
-  <table class="table" id="pendingcalls">
-  
-  </table>
-
-  <script src='js/lib/socket.io.js'></script>
-  <script src='js/lib/adapter.js'></script>
-  <script src="js/fullApp.js"></script>
-
-  <script type="text/javascript">
-  $(document).ready(function(){
-    timeout = setInterval(update, 5000);
-    
-    function update (){
-      $.ajax({
-        url: "http://localhost:8000/updatePendingAlerts",
-        
-        timeout: 2000,
-        success: function (data)  {
-          console.log(data);
-          json = data;
-          //oh putain c'est vraiment trop salle.
-          var oldtable = document.getElementById("pendingcalls");
-          var i,tmp;          
-          oldtable.innerHTML = "";
-          if(1){
-            for (i in json){
-              var tr = document.createElement("tr");
-              var td = document.createElement("td");
-              var tdCall = document.createElement("td");
-              tdCall.innerHTML = "<button class=\"btn\" onclick=\"responceCall("+i+")\">Help him</button>";
-              var text = document.createTextNode(json[i].name);
-              td.appendChild(text);
-              tr.appendChild(td);
-              tr.appendChild(tdCall);
-              oldtable.appendChild(tr);              
-            }            
-          }
-        
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-          clearInterval(timeout);
-          //alert('error ' + textStatus + " " + errorThrown);
-        }
-      });
-    }
-   
-  });
-
-
-  </script>
-
-</body>
+        <script src="js/lib/adapter.js"></script>
+        <script src="js/lib/socket.io.js"></script>
+        <script src="js/webRTC.js"></script>        
+        <script src="js/operator.js"></script>
+    </body>
 </html>

@@ -21,7 +21,7 @@ var WebRTC = function()	{
 
 
 		getUserMedia: function(successHandler)	{
-			navigator.getUserMedia(
+			getUserMedia(
 
 				private.constraints,
 

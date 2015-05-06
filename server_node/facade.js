@@ -138,37 +138,6 @@ app.get("/userDisconnection", UserIsAthenticated, function (req,res,next){
 });
 
 
-//Ajax text
-app.get("/test", function(req,res){
-	res.render("test");
-});
-var http = require('http');
-
-app.get("/needHelp",function (req, res) {
-    
-    pendingAlerts.push(req.session.user);
-    var room = pendingAlerts.indexOf(req.session.user);
-    console.log('Alert receive, room :'+room);
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('_testcb(\'{"room": "'+room+'"}\')');
-});
-
-app.get("/updatePendingAlerts", function (req, res){
-	console.log('update');
-	res.writeHead(200, {'Content-Type': 'application/json'});
-    res.end(JSON.stringify(pendingAlerts));
-});
-app.get("/helpSomeone", function (req, res){
-	
-	var room = '0';
-	console.log('alert taken for room : '+room);
-	var data = {room :  room};
-	data = JSON.stringify(data);
-	res.writeHead(200, {'Content-Type': 'applicatio,/json'});
-    res.end(data);
-});
-
-
 
 /*-------------Startup----------------*/
 
