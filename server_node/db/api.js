@@ -6,54 +6,40 @@ var db_pool     = db.createPool({
     user        : 'api',
     password    : ''
 });
-
-var tespd = "pdpdpdpdpdpd";
+var foundUser;
+var tespd = "pdpdpdpdpdpd"
 function logerror (method, message, error){
     console.error(method+', '+message+' === '+error);
 }
 
 
-function userLogin (strEmail, strPassphrase){
-    var foundUser;  
+function userLogin (strEmail, strPassphrase, send_response){
+  
      db_pool.getConnection( function ( objError, objConnection ){
         if( objError ){
            logerror('userLogin', 'connection error',objError );
 
         }else{
             strQuery = "select *  from user where email=" + "'" + strEmail + "' and " + "passphrase="+"'" + strPassphrase + "'";
-            //console.log(strQuery);
-            //sending the query to db server
             objConnection.query(
                 strQuery, 
                 function ( objError, objRows, objFields){
                 if( objError ){
                     logerror('userLogin','query error',objError);
                 }else{
-                    console.log(objRows);
+                    //console.log(objRows);
                     if (objRows.length == 1) {
                        //we found the dude
                        name = objRows[0].name;
                        email = objRows[0].email;
                        foundUser = new users.Client(email , name);
-                       console.log(tespd);
-                      
-
+                       send_response(foundUser);   
                     }
-                    console.log(foundUser+'1');
                 }
-                console.log(foundUser+'2');
-                return foundUser;
-                
             });
-            console.log(foundUser+'3');
-            
         }
-        console.log(foundUser+'4');
         objConnection.release();
         });
-     console.log(foundUser+'5');
-     return foundUser;
-
 }
 module.exports.userLogin = userLogin;
 

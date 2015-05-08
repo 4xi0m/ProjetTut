@@ -92,26 +92,27 @@ app.post("/userConnection", function (req, res){
 	var email = req.body.email;
 	var password = req.body.password;
 
-	//ask data base 
-	var user = database.userLogin(email, password);
-	console.log("facade, login ==== user : "+user);
-
-	if(user){
-		sess=req.session;
-		//security parameter for the session
-		sess.user = user;
-		if(sess.user instanceof userClass.Staff){
-			res.redirect('/work_space');
-		}else if (sess.user instanceof userClass.Client){
-			res.redirect('/help');
+	var send_response = function (user){
+		console.log("facade, login ==== user : "+user);
+		if(user){
+			sess=req.session;
+			//security parameter for the session
+			sess.user = user;
+			if(sess.user instanceof userClass.Staff){
+				res.redirect('/work_space');
+			}else if (sess.user instanceof userClass.Client){
+				res.redirect('/help');
+			}else {
+				console.log("error at login dispach");
+			}
+			
 		}else {
-			console.log("error at login dispach");
+			res.redirect("/");
 		}
-		
-	}else {
-		res.redirect("/");
 	}
-		//console.log("Trying to login : %s with %s".green, name, password);
+	//ask data base 
+	database.userLogin(email, password, send_response);
+	
 });
 
 //Staff functions 
