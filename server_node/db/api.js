@@ -1,19 +1,63 @@
-var node_port   = 8080;
-var express     = require('express'); // This makes REST easy
-var app         = express();
+var users = require("../model/user.js");
 var db          = require('mysql'); //This sets up the MySQL connection
 var db_pool     = db.createPool({
     host        : 'localhost',
-    database    : 'WebRTC',
+    database    : 'test',
     user        : 'api',
-    password    : 'api'
+    password    : ''
 });
 
+var tespd = "pdpdpdpdpdpd";
+function logerror (method, message, error){
+    console.error(method+', '+message+' === '+error);
+}
 
 
-app.get( '/api/:method', function ( objRequest, objResponse ){
-    // Set response type from text/html to application/json
-    objResponse.setHeader( 'content-type', 'application/json' );
+function userLogin (strEmail, strPassphrase){
+    var foundUser;  
+     db_pool.getConnection( function ( objError, objConnection ){
+        if( objError ){
+           logerror('userLogin', 'connection error',objError );
+
+        }else{
+            strQuery = "select *  from user where email=" + "'" + strEmail + "' and " + "passphrase="+"'" + strPassphrase + "'";
+            //console.log(strQuery);
+            //sending the query to db server
+            objConnection.query(
+                strQuery, 
+                function ( objError, objRows, objFields){
+                if( objError ){
+                    logerror('userLogin','query error',objError);
+                }else{
+                    console.log(objRows);
+                    if (objRows.length == 1) {
+                       //we found the dude
+                       name = objRows[0].name;
+                       email = objRows[0].email;
+                       foundUser = new users.Client(email , name);
+                       console.log(tespd);
+                      
+
+                    }
+                    console.log(foundUser+'1');
+                }
+                console.log(foundUser+'2');
+                return foundUser;
+                
+            });
+            console.log(foundUser+'3');
+            
+        }
+        console.log(foundUser+'4');
+        objConnection.release();
+        });
+     console.log(foundUser+'5');
+     return foundUser;
+
+}
+module.exports.userLogin = userLogin;
+
+/*
 
     // Get a connection to the database
     db_pool.getConnection( function ( objError, objConnection ){
@@ -182,7 +226,4 @@ function sendError( objResponse, iStatusCode, strResult,  strType, objError ){
         err_type    : strType
     });
 }
-
-/* Start listening on port 3000 */
-app.listen( node_port );
-console.log( "App listening on port " + node_port );
+*/

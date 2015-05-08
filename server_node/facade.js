@@ -11,7 +11,7 @@ var $ = require('jquery');
 
 //model
 
-var database = require("./model/dbsumulator.js");
+var database = require("./db/api.js");
 var userClass = require("./model/user.js");
 
 
@@ -32,49 +32,50 @@ app.use(sessions({secret : 'secret'}));
 //static serving
 app.use(express.static(__dirname + '/views'));
 
+
 function StaffIsAuthenticated(req,res,next){
     var sess = req.session;
     var staff_member_to_verify = sess.user;
     //console.log("StaffIsAUtheenticated : "+staff_member_to_verify.staff);
     if(staff_member_to_verify && staff_member_to_verify.staff){
-    	console.log("staff member");
+    	//console.log("staff member");
         next();
     }else{
         //authen failed 
-        res.render("views/home_page");
+        res.redirect("/");
     }
 }
-function UserIsAthenticated (req, res, next){
-	var sess = req.session;
-    //var user_member_to_verify = sess.user;
-	if(1){
-    	console.log("user at least");
-        next();
-    }else{
-        //authen failed 
-        res.render("views/home_page");
-    }
-}
+
 function ClientIsAuthenticated(req,res,next){
     var sess = req.session;
     var client_to_verify = sess.user;
     if(client_to_verify && client_to_verify.client){
-    	console.log("client");
+    	//console.log("client");
         next();
     }else{
         //authen failed 
-        res.render("views/home_page");
+        res.redirect("/");
     }
 }
-function renderWorkSpace (req, res, worker){
-	res.render("views/work_space",{
-		staff_member : worker
-	});
-
+function notConnected (req,res,next){
+	var sess = req.session;
+	var user_to_verify = sess.user;
+	if(user_to_verify){
+		if( user_to_verify.client){
+			res.redirect("/help")
+		}else if(user_to_verify.staff){
+			res.redirect("/work_space")
+		}
+	}else{
+		next();
+	}
+    
+   	
 }
 
+
 //routes
-app.get('/', function(req, res){
+app.get('/', notConnected , function (req, res, next){
 	//var myitems = [ {id : "1" , desc : "food"},{id : "2", desc :"maman"}, {id : "3", desc :"toto"}];
 	res.render("views/home_page",{
 		/*title : "learning",
@@ -92,7 +93,8 @@ app.post("/userConnection", function (req, res){
 	var password = req.body.password;
 
 	//ask data base 
-	var user = database.login(email, password);
+	var user = database.userLogin(email, password);
+	console.log("facade, login ==== user : "+user);
 
 	if(user){
 		sess=req.session;
@@ -107,7 +109,7 @@ app.post("/userConnection", function (req, res){
 		}
 		
 	}else {
-		res.render("views/home_page",{});
+		res.redirect("/");
 	}
 		//console.log("Trying to login : %s with %s".green, name, password);
 });
@@ -115,7 +117,9 @@ app.post("/userConnection", function (req, res){
 //Staff functions 
 app.get("/work_space", StaffIsAuthenticated, function (req, res, next){
 	var staff_member = req.session.user;
-	renderWorkSpace(req, res, staff_member);
+	res.render("views/work_space",{
+		staff_member : staff_member
+	});
 });
 //Staff functions 
 app.get("/help", ClientIsAuthenticated, function (req, res, next){
@@ -126,7 +130,7 @@ app.get("/help", ClientIsAuthenticated, function (req, res, next){
 });
 
 
-app.get("/userDisconnection", UserIsAthenticated, function (req,res,next){
+app.get("/userDisconnection", function (req,res,next){
 	//killing session
 	req.session.destroy(function (err){
 		if(err){
@@ -137,6 +141,24 @@ app.get("/userDisconnection", UserIsAthenticated, function (req,res,next){
 	})
 });
 
+/*-----------Error handeling----------*/
+/*
+This code has to be here (after all other routes 
+possible). Otherwise routes coded after that will
+be ignored. 
+*/
+//404
+
+app.use(function(req, res, next){
+  res.status(404);
+  //do a page
+  res.type('txt').send('Not found yet');
+});
+
+
+//500 errors handeling
+//not use so far (developing stage), we want to see the verbose of the 
+//errors to de bug
 
 
 /*-------------Startup----------------*/

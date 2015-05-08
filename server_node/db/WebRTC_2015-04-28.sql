@@ -42,7 +42,8 @@ LOCK TABLES `Staff` WRITE;
 
 INSERT INTO `Staff` (`login`, `email`, `name`, `firstname`, `passphrase`, `id`)
 VALUES
-	('yanchaowang@gmail.com','yanchaowang@gmail.com','wang','yanchao','123456',0);
+	('yanchaowang@gmail.com','yanchaowang@gmail.com','wang','yanchao','123456',0),
+	('admin@admin.fr','admin@admin.fr','Admin','chief','123456',1);
 
 /*!40000 ALTER TABLE `Staff` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -68,6 +69,7 @@ LOCK TABLES `User` WRITE;
 
 INSERT INTO `User` (`email`, `name`, `firstName`, `id`, `passphrase`)
 VALUES
+	('a@b.c','User','abc',2222,'abc'),
 	('abc@gmail.com','wang','yanchao',1,'simplepassword'),
 	('yanchaowang2@gmail.com','wang','yanchao',2,'123456'),
 	('yanchaowang@gmail.com','wang','yanchao',3,'123456'),

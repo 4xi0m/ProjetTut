@@ -25,9 +25,9 @@
 		"server_hosting_port" : "8000",
 		"data_base" : {
 			"hosting" : "localhost",
-			"hosting_post": "",
+			"hosting_port": "3306",
 			"user_name" : "api",
-			"passphrase" : "api"
+			"passphrase" : ""
 		}
 		
 
