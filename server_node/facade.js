@@ -106,7 +106,7 @@ app.post('/createAccount', notConnected, function (req , res ,next){
 			sess.user = user;
 			res.redirect('/help');
 		}else{
-			res.render("views/createAccount", {'error' : 'faillure'});
+			res.render("views/createAccount", {'error' : error});
 		}
 	}
 
@@ -114,7 +114,7 @@ app.post('/createAccount', notConnected, function (req , res ,next){
 	console.log("createAccount === name : "+strName+" firstname : "+strFirstName+" email : "+strEmail);
 	console.log("more === pass1 : "+pass1+" pass2 : "+pass2);
 	if(pass2 != pass1){
-		res.render("views/createAccount", {'error' : 'faillure'});
+		res.render("views/createAccount", {'error' : 'deferent_pass'});
 	}else{
 		//enter in the data base
 		database.addClient(strName, strFirstName, strEmail, pass2, send_response);
@@ -124,20 +124,16 @@ app.post('/createAccount', notConnected, function (req , res ,next){
 
 
 app.post("/userConnection", function (req, res){
-	var login =1;
 	var sess;
 	var email = req.body.email;
 	var password = req.body.password;
 
-	var send_response = function (client){
+	var send_response = function (error,client){
 		console.log("facade, login ==== user : "+user);
 		if(user){
 			sess=req.session;
-			//security parameter for the session
 			sess.user = client;
-			if(sess.user instanceof userClass.Staff){
-				res.redirect('/work_space');
-			}else if (sess.user instanceof userClass.Client){
+			if (sess.user instanceof userClass.Client){
 				res.redirect('/help');
 			}else {
 				console.log("error at login dispach");
@@ -148,9 +144,37 @@ app.post("/userConnection", function (req, res){
 		}
 	}
 	//ask data base 
-	database.clientLogin(email, password, send_response);
-	
+	database.clientLogin(email, password, send_response);	
 });
+app.get("/opperatorLogin", function (req, res){
+	res.render("views/opperatorLogin", {});
+});
+app.post("/opperatorConnection", function (req, res){
+	var sess;
+	var email = req.body.email;
+	var password = req.body.password;
+
+	var send_response = function (error,staff){
+		console.log("facade, login ==== user : "+staff);
+		if(staff){
+			sess=req.session;
+			sess.user = staff;
+			if(sess.user instanceof userClass.Staff){
+				res.redirect('/work_space');
+			}else {
+				console.log("error at login dispach");
+			}			
+		}else {
+			res.redirect("/opperatorLogin");
+		}
+	}
+	//ask data base 
+	database.staffLogin(email, password, send_response);
+
+});
+
+
+
 
 //Staff functions 
 app.get("/work_space", StaffIsAuthenticated, function (req, res, next){

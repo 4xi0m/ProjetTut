@@ -18,6 +18,7 @@ function clientLogin (strEmail, strPassphrase, send_response){
      db_pool.getConnection( function ( objError, objConnection ){
         if( objError ){
            logerror('userLogin', 'connection error',objError );
+           send_response(objError, null);
 
         }else{
             strQuery = "select *  from user where email=" + "'" + strEmail + "' and " + "passphrase="+"'" + strPassphrase + "'";
@@ -26,6 +27,7 @@ function clientLogin (strEmail, strPassphrase, send_response){
                 function ( objError, objRows, objFields){
                 if( objError ){
                     logerror('userLogin','query error',objError);
+                    send_response(objError, null);
                 }else{
                     //console.log(objRows);
                     if (objRows.length == 1) {
@@ -33,7 +35,7 @@ function clientLogin (strEmail, strPassphrase, send_response){
                        name = objRows[0].name;
                        email = objRows[0].email;
                        foundUser = new users.Client(email , name);
-                       send_response(foundUser);   
+                       send_response(null,foundUser);   
                     }
                 }
             });
@@ -70,6 +72,42 @@ function addClient (strEmail, strName, strFirstName, strPassphrase, send_respons
     });
 } 
 module.exports.addClient = addClient;
+
+
+function staffLogin(strEmail, strPassphrase, send_response){
+     var strQuery = "";
+     db_pool.getConnection( function ( objError, objConnection ){
+        if( objError ){
+           logerror('userLogin', 'connection error',objError );
+           send_response(objError, null);
+
+        }else{
+            //strQuery = "select *  from user where email=" + "'" + strEmail + "' and " + "passphrase="+"'" + strPassphrase + "'";
+            strQuery = "select * from Staff where email=" + "'" + strEmail + "' and " + "passphrase="+"'" + strPassphrase + "'";
+            objConnection.query(
+                strQuery, 
+                function ( objError, objRows, objFields){
+                if( objError ){
+                    logerror('userLogin','query error',objError);
+                    send_response(objError, null);
+                }else{
+                    //console.log(objRows);
+                    if (objRows.length == 1) {
+                       //we found the dude
+                       name = objRows[0].name;
+                       email = objRows[0].email;
+                       foundUser = new users.Staff(email , name);
+                       send_response(null,foundUser);   
+                    }
+                }
+            });
+        }
+        objConnection.release();
+        });
+}
+module.exports.staffLogin = staffLogin;
+
+
 /*
     // Get a connection to the database
     db_pool.getConnection( function ( objError, objConnection ){
@@ -119,7 +157,7 @@ module.exports.addClient = addClient;
                     objConnection.release();
                     break;
 
-/*
+
                 case 'userLogin':
                     strEmail = params['email'];
                     strPassphrase = params['passphrase'];
