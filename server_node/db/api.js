@@ -107,7 +107,35 @@ function staffLogin(strEmail, strPassphrase, send_response){
 }
 module.exports.staffLogin = staffLogin;
 
+function addStaff (strName, strFirstName, strEmail, strPassphrase, send_response){
+    var strQuery = "";
+    var added_User;
+    var strLogin = strEmail;
+    db_pool.getConnection( function ( objError, objConnection ){
+        if( objError ){
+           console.error("addUser "+objError);
+           send_response(objError, null);
+        }else{
+            var tmpStr = "'" + strLogin + "','" + strEmail + "','" + strName + "','" + strFirstName + "','" + strPassphrase +"'";
+            strQuery = "insert into Staff (login, email, name, firstName, passphrase) VALUES ("+ tmpStr +")";
+            console.log(strQuery);
 
+            objConnection.query(
+                strQuery,
+                function ( objError, objRows, objFields ){
+                    if( objError ){
+                        console.error("addUser bas "+objError);
+                        send_response(objError, null)
+                    }else{          
+                        added_User = new users.Client(strEmail, strName);
+                        send_response(null, added_User);
+                    }
+                });
+            objConnection.release();
+        }           
+    });
+}
+module.exports.addStaff = addStaff;
 /*
     // Get a connection to the database
     db_pool.getConnection( function ( objError, objConnection ){

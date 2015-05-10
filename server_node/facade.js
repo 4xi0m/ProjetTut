@@ -174,6 +174,43 @@ app.post("/opperatorConnection", function (req, res){
 });
 
 
+//en téhorie il faut être connceté non en staff ? 
+app.get("/addOpperator",function (req, res){
+	res.render("views/addOpperator", {});
+});
+
+
+app.post("/addOpperator", function (req, res){
+	var sess;
+	var b = req.body;
+	var strName = b.name;
+	var strFirstName = b.firstname;
+	var strEmail = b.email;
+	var pass1 = b.password1;
+	var pass2 = b.password2;
+
+	var send_response = function (error, user){
+		//console.error("addOpperator "+error);
+		if (user){
+			res.render('views/addOpperator', {'action': 'newWorkerAdded'});
+		}else{
+			res.render("views/addOpperator", {'error' : error});
+		}
+	}
+
+	//security and good checking
+	console.log("addOpperator === name : "+strName+" firstname : "+strFirstName+" email : "+strEmail);
+	console.log("more === pass1 : "+pass1+" pass2 : "+pass2);
+	if(pass2 != pass1){
+		res.render("views/addOpperator", {'error' : 'diferent_pass'});
+	}else{
+		//enter in the data base
+		database.addStaff(strName, strFirstName, strEmail, pass2, send_response);
+	}	
+
+});
+
+
 
 
 //Staff functions 
