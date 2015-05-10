@@ -13,8 +13,8 @@ function logerror (method, message, error){
 }
 
 
-function userLogin (strEmail, strPassphrase, send_response){
-  
+function clientLogin (strEmail, strPassphrase, send_response){
+    var strQuery = "";
      db_pool.getConnection( function ( objError, objConnection ){
         if( objError ){
            logerror('userLogin', 'connection error',objError );
@@ -41,10 +41,36 @@ function userLogin (strEmail, strPassphrase, send_response){
         objConnection.release();
         });
 }
-module.exports.userLogin = userLogin;
+module.exports.clientLogin = clientLogin;
 
+
+function addClient (strEmail, strName, strFirstName, strPassphrase, send_response){
+    var strQuery = "";
+    var added_User;
+    db_pool.getConnection( function ( objError, objConnection ){
+        if( objError ){
+           console.error("addUser "+objError);
+           send_response(objError, null);
+        }else{
+            var tmpStr = "'" +strEmail + "','" + strName + "','" + strFirstName + "','" + strPassphrase +"'";
+            strQuery = "insert into User (email, name, firstName, passphrase) VALUES ("+ tmpStr +")";
+            //console.log(strQuery);
+            objConnection.query(
+                strQuery,
+                function ( objError, objRows, objFields ){
+                    if( objError ){
+                        send_response(objError, null)
+                    }else{          
+                        added_User = new users.Client(strEmail, strName);
+                        send_response(null, added_User);
+                    }
+                });
+            objConnection.release();
+        }           
+    });
+} 
+module.exports.addClient = addClient;
 /*
-
     // Get a connection to the database
     db_pool.getConnection( function ( objError, objConnection ){
 
@@ -92,6 +118,8 @@ module.exports.userLogin = userLogin;
                     );
                     objConnection.release();
                     break;
+
+/*
                 case 'userLogin':
                     strEmail = params['email'];
                     strPassphrase = params['passphrase'];

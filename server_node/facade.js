@@ -74,7 +74,7 @@ function notConnected (req,res,next){
 }
 
 
-//routes
+
 app.get('/', notConnected , function (req, res, next){
 	//var myitems = [ {id : "1" , desc : "food"},{id : "2", desc :"maman"}, {id : "3", desc :"toto"}];
 	res.render("views/home_page",{
@@ -84,6 +84,43 @@ app.get('/', notConnected , function (req, res, next){
 
 });
 
+/* createAccount on the app 
+Renders the creat Account page.
+
+*/
+app.get('/createAccount', notConnected, function (req, res, next){
+	res.render("views/createAccount",{});
+});
+app.post('/createAccount', notConnected, function (req , res ,next){
+	var sess;
+	var b = req.body;
+	var strName = b.name;
+	var strFirstName = b.firstname;
+	var strEmail = b.email;
+	var pass1 = b.password1;
+	var pass2 = b.password2;
+
+	var send_response = function (error, user){
+		if (user){
+			sess = req.session;
+			sess.user = user;
+			res.redirect('/help');
+		}else{
+			res.render("views/createAccount", {'error' : 'faillure'});
+		}
+	}
+
+	//security and good checking
+	console.log("createAccount === name : "+strName+" firstname : "+strFirstName+" email : "+strEmail);
+	console.log("more === pass1 : "+pass1+" pass2 : "+pass2);
+	if(pass2 != pass1){
+		res.render("views/createAccount", {'error' : 'faillure'});
+	}else{
+		//enter in the data base
+		database.addClient(strName, strFirstName, strEmail, pass2, send_response);
+	}	
+
+});
 
 
 app.post("/userConnection", function (req, res){
@@ -92,12 +129,12 @@ app.post("/userConnection", function (req, res){
 	var email = req.body.email;
 	var password = req.body.password;
 
-	var send_response = function (user){
+	var send_response = function (client){
 		console.log("facade, login ==== user : "+user);
 		if(user){
 			sess=req.session;
 			//security parameter for the session
-			sess.user = user;
+			sess.user = client;
 			if(sess.user instanceof userClass.Staff){
 				res.redirect('/work_space');
 			}else if (sess.user instanceof userClass.Client){
@@ -111,7 +148,7 @@ app.post("/userConnection", function (req, res){
 		}
 	}
 	//ask data base 
-	database.userLogin(email, password, send_response);
+	database.clientLogin(email, password, send_response);
 	
 });
 
