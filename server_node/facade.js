@@ -324,8 +324,9 @@ io.sockets.on('connection', function (socket){
 	socket.on('askForHelp', function (client){
 		if(peersNumber == 0)	{
 			console.log('help asked');
-			room = client;
+			room = client;					//	client = room name (md5(md5(client_mail) + timestamp))
 			peersNumber++;
+			pendingCalls.push(client);
 			socket.join(room);
 			socket.broadcast.emit('helpAsked', room);
 		}
