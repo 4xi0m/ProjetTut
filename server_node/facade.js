@@ -129,8 +129,8 @@ app.post("/userConnection", function (req, res){
 	var password = req.body.password;
 
 	var send_response = function (error,client){
-		console.log("facade, login ==== user : "+user);
-		if(user){
+		console.log("facade, login ==== user : "+client);
+		if(client){
 			sess=req.session;
 			sess.user = client;
 			if (sess.user instanceof userClass.Client){
