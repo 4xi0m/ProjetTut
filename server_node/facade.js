@@ -136,6 +136,9 @@ app.post('/createAccount', notConnected, function (req , res ,next){
 		}else{
 			res.render("views/createAccount", {'error' : error});
 		}
+		if(error){
+			console.log(error);
+		}
 	}
 
 	//security and good checking
@@ -145,7 +148,7 @@ app.post('/createAccount', notConnected, function (req , res ,next){
 		res.render("views/createAccount", {'error' : 'deferent_pass'});
 	}else{
 		//enter in the data base
-		database.addClient(strName, strFirstName, strEmail, pass2, send_response);
+		database.addClient(strEmail, strName, strFirstName, pass2, send_response);
 	}	
 
 });

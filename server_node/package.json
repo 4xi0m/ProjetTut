@@ -43,6 +43,7 @@
 		"node-static": "*",
 		"socket.io" : "*",
 		"jquery" : "*"
+		
 
 	}
 
