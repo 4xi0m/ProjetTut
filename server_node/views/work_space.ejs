@@ -1,6 +1,14 @@
 <!DOCTYPE html>
-<%- include utilities/header.ejs %>
-    
+<html>
+<script type="text/javascript" src="ejs_production.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="workspace.css" type="text/css">
+
+  <body>
         <h1>Control page</h1>
 
         <h2>Agent : <%=staff_member.name%></h2>
@@ -11,7 +19,7 @@
             <table>
               <tr>
                 <td>
-                  <video id="localVideo" autoplay></video>
+                  <video width="300" height="300" src="https://www.youtube.com/watch?v=G5OicZrhkHg" id="localVideo" autoplay ></video>
                 </td>
                 <td>
                   <video id="remoteVideo" autoplay></video>
@@ -59,4 +67,9 @@
         <script src="js/lib/socket.io.js"></script>
         <script src="js/webRTC.js"></script>        
         <script src="js/operator.js"></script>
+
+</body>
+
 <%- include utilities/footer.ejs%>
+
+</html>

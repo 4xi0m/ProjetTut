@@ -1,0 +1,10 @@
+{
+  "name": "WRTC",
+  "description": "WebRTC client",
+  "version": "0.0.1",
+  "app": {
+    "launch": {
+      "local_path": "home_page.ejs"
+    }
+  }
+}

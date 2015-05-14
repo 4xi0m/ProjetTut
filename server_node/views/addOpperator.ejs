@@ -11,19 +11,51 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="home.css" type="text/css">
 
     </head>
  
-    <body>
+    <body class="bg-primary">
 
-        <h1>Add OPPERATOR in the sys bro ! </h1>
-    	<form method="post" action="/addOpperator">
-    		<input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter name" name="name">
+        
+    	<form method="post" action="/addOpperator" class="form-horizontal">  
+            <div class="coordonnees">
+                <div class="form-group">
+                <div class="col-lg-6">
+                    <h1 class="text-center">Vos coordonnées </h1>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-6">
+    		      <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter name" name="name">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-6">
     		<input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter firstname" name="firstname">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-6">
     		 <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" name="email">
-    		 <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password1">
-    		 <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Confirme Password" name="password2">
-    		 <button type="submit" class="btn btn-default">Submit</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-6">
+    		<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password1">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-6">
+    		<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Confirme Password" name="password2">
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <div class="col-lg-6">
+    		      <button type="submit" class="btn btn-default">Submit</button>
+                </div>
+            </div>
+            </div>
     	</form>
 
 
