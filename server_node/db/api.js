@@ -111,22 +111,28 @@ function staffLogin(strEmail, strPassphrase, send_response){
     var connection = db.createConnection(connectparam);
     connection.connect;
 
-    
+    var timeAndId = "select dateCreated, id from staff where email='"+strEmail+"' into @time, @id;";
+    var hash1 = "select md5('"+strPassphrase+"') into @hash1;"
+    var hash2 = "select concat(@time,@hash1) into @hash2;";
+    var query = "select * from staff where id=@id and passphrase=md5(@hash2);";
+    strQuery =timeAndId+hash1+hash2+query;
     connection.query(
         strQuery, 
         function ( objError, objRows, objFields){
             if( objError ){
                 logerror('userLogin','query error',objError);
                 send_response(objError, null);
-            }else{
-                //console.log(objRows);
-                if (objRows.length == 1) {
-                    //we found the dude
-                    name = objRows[0].name;
-                    email = objRows[0].email;
-                    foundUser = new users.Staff(email , name);
-                    send_response(null,foundUser);   
+            }else{ 
+                if (objRows[3][0]) {//3 because we have 4 queries 
+                    var foundUser =objRows[3][0];
+                    email = foundUser.email;
+                    id = foundUser.id;
+                    name = foundUser.name;
+                    firstName = foundUser.firstName;
+                    creationDate = foundUser.dateCreated; 
+                    foundUser = new users.Staff(email,id,name,firstName,creationDate);                       
                 }
+                send_response(null,foundUser);                
             }
         });
     connection.end();
@@ -169,3 +175,10 @@ function addStaff (strName, strFirstName, strEmail, strPassphrase, send_response
     connection.end();
 }
 module.exports.addStaff = addStaff;
+
+/**Store in the database finished calles
+*/
+function stroreCallFinished (callback){
+
+
+}module.exports.stroreCallFinished = stroreCallFinished;

@@ -28,9 +28,12 @@
 			"hosting_port": "3306",
 			"user_name" : "api",
 			"passphrase" : ""
+		},
+		"session":{
+			"resave" : false,
+			"saveUninitialized":true,
+			"cookie" : { "secure": true }
 		}
-		
-
 	},
 	"dependencies":
 	{
