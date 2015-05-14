@@ -111,7 +111,7 @@ function staffLogin(strEmail, strPassphrase, send_response){
     var connection = db.createConnection(connectparam);
     connection.connect;
 
-    strQuery = "select * from Staff where email=" + "'" + strEmail + "' and " + "passphrase="+"'" + strPassphrase + "'";
+    
     connection.query(
         strQuery, 
         function ( objError, objRows, objFields){
@@ -136,7 +136,7 @@ module.exports.staffLogin = staffLogin;
 
 function addStaff (strName, strFirstName, strEmail, strPassphrase, send_response){
     var strQuery = "";
-    var added_User = null;
+    var added_staff = null;
     var strLogin = strEmail;
    
     var connection = db.createConnection(connectparam);
@@ -144,9 +144,13 @@ function addStaff (strName, strFirstName, strEmail, strPassphrase, send_response
     var tmpStr = "'" + strLogin + "','" + strEmail + "','" + strName + "','" + strFirstName + "','" + strPassphrase +"'";
     
     //query
-    strQuery = "insert into Staff (login, email, name, firstName, passphrase) VALUES ("+ tmpStr +")";
-    
-
+    var time = "select now() into @a;"
+    var hashpass = "select md5('"+strPassphrase+"') into @b;";
+    var hashadtime = "select concat(@a, @b) into @c; ";
+    var prepquery =  "insert into Staff (email, name, firstName, passphrase, dateCreated)";
+    var values = "values ('"+strEmail+"','"+strName+"','"+strFirstName+"',md5(@c), @a);";   
+    var id = "select id, dateCreated from user where email='"+strEmail+"';"  
+    strQuery = time+hashpass+hashadtime+prepquery+values+id;
     console.log(strQuery);
 
     connection.query(
@@ -155,9 +159,11 @@ function addStaff (strName, strFirstName, strEmail, strPassphrase, send_response
             if( objError ){
                 console.error("addStaff"+objError);
                 send_response(objError, null)
-            }else{          
-                added_User = new users.Client(strEmail, strName);
-                send_response(null, added_User);
+            }else{
+                if(objRows[4][0]){//well added
+                    added_staff = new users.Staff(strEmail,objRows[4][0].id, strName, strFirstName,objRows[4][0].dateCreated);
+                }               
+                send_response(null, added_staff);
             }
         });
     connection.end();
