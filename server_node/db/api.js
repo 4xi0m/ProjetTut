@@ -37,7 +37,7 @@ function clientLogin (strEmail, strPassphrase, send_response){
     var connection = db.createConnection(connectparam);
     connection.connect();
 
-    var timeAndId = "select dateCreated, id from user where email='"+strEmail+"' into @time, @id;";
+    var timeAndId = "select date_created, id from user where email='"+strEmail+"' into @time, @id;";
     var hash1 = "select md5('"+strPassphrase+"') into @hash1;"
     var hash2 = "select concat(@time,@hash1) into @hash2;";
     var query = "select * from user where id=@id and passphrase=md5(@hash2);";
@@ -81,9 +81,9 @@ function addClient (strEmail, strName, strFirstName, strPassphrase, send_respons
     var time = "select now() into @a;"
     var hashpass = "select md5('"+strPassphrase+"') into @b;";
     var hashadtime = "select concat(@a, @b) into @c; ";
-    var prepquery =  "insert into User (email, name, firstName, passphrase, dateCreated)";
+    var prepquery =  "insert into User (email, name, first_name, passphrase, date_created)";
     var values = "values ('"+strEmail+"','"+strName+"','"+strFirstName+"',md5(@c), @a);";   
-    var id = "select id, dateCreated from user where email='"+strEmail+"';"  
+    var id = "select id, date_created from user where email='"+strEmail+"';"  
     strQuery = time+hashpass+hashadtime+prepquery+values+id;
     
     connection.query(
@@ -149,7 +149,7 @@ function addStaff (strName, strFirstName, strEmail, strPassphrase, send_response
            send_response(objError, null);
         }else{
             var tmpStr = "'" + strLogin + "','" + strEmail + "','" + strName + "','" + strFirstName + "','" + strPassphrase +"'";
-            strQuery = "insert into Staff (login, email, name, firstName, passphrase) VALUES ("+ tmpStr +")";
+            strQuery = "insert into Staff (login, email, name, first_name, passphrase) VALUES ("+ tmpStr +")";
             console.log(strQuery);
 
             objConnection.query(
