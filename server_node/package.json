@@ -24,13 +24,17 @@
 		"server_hosting" : "localhost",
 		"server_hosting_port" : "8000",
 		"data_base" : {
+			"connected" : false,
 			"hosting" : "localhost",
 			"hosting_port": "3306",
 			"user_name" : "api",
 			"passphrase" : ""
+		},
+		"session":{
+			"resave" : false,
+			"saveUninitialized":true,
+			"cookie" : { "secure": true }
 		}
-		
-
 	},
 	"dependencies":
 	{
@@ -43,6 +47,7 @@
 		"node-static": "*",
 		"socket.io" : "*",
 		"jquery" : "*"
+		
 
 	}
 

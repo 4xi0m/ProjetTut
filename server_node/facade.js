@@ -3,16 +3,33 @@ var sessions = require('express-session');
 var bodyParser = require("body-parser");
 var io = require('socket.io');
 var colors = require('colors');
+var crypto = require("crypto");
 var app = express();
+var config_fields =require("./package.json").config;
 
 
 
+//app config
+app.use(bodyParser());
 app.set("view engine", "ejs");
 app.set("views", __dirname);								//+/view si on veux être propre
-app.use(bodyParser.urlencoded({extended: true})); 		   	// to support URL-encoded bodies
-app.use(sessions({secret : 'secret'}));						//session use (not secure at all)
 app.use(express.static(__dirname + '/views'));				//static serving
 
+//session security enchription
+try{
+	var session_conf = config_fields.session;
+	var buf = crypto.randomBytes(256).toString('hex');
+	//console.log('Have %d bytes of random data: %s', buf.length, buf);
+  	app.use(sessions({
+  		secret : buf,
+  		resave: session_conf.resave,
+  		saveUninitialized: session_conf.saveUninitialized,
+  		
+  }));
+}catch(er){
+	console.log("Serve did not start because session secret could not the intinialize".red);
+	console.error(er);
+}
 
 
 
@@ -20,7 +37,6 @@ app.use(express.static(__dirname + '/views'));				//static serving
 
 
 //config values
-var config_fields =require("./package.json").config;
 var server = config_fields.server_hosting;
 var server_port = config_fields.server_hosting_port;
 //console.log(server);
@@ -33,12 +49,17 @@ var server_port = config_fields.server_hosting_port;
 ---------------------------------MODEL---------------------------------
 ----------------------------------------------------------------------*/
 
+//for debug
+var database = require("./db/simulator.js");
+if(config_fields.data_base.connected){
+	database = require("./db/api.js");
+}
 
-var database = require("./db/api.js");
 var userClass = require("./model/user.js");
+
+
+
 var pendingCalls = new Array();
-
-
 
 
 
@@ -136,6 +157,9 @@ app.post('/createAccount', notConnected, function (req , res ,next){
 		}else{
 			res.render("views/createAccount", {'error' : error});
 		}
+		if(error){
+			console.log(error);
+		}
 	}
 
 	//security and good checking
@@ -145,7 +169,7 @@ app.post('/createAccount', notConnected, function (req , res ,next){
 		res.render("views/createAccount", {'error' : 'deferent_pass'});
 	}else{
 		//enter in the data base
-		database.addClient(strName, strFirstName, strEmail, pass2, send_response);
+		database.addClient(strEmail, strName, strFirstName, pass2, send_response);
 	}	
 
 });
@@ -153,8 +177,9 @@ app.post('/createAccount', notConnected, function (req , res ,next){
 
 
 //	User connection page
-app.post("/userConnection", function (req, res){
+app.post("/userConnection",notConnected, function (req, res){
 	var sess;
+	console.log(req.body);
 	var email = req.body.email;
 	var password = req.body.password;
 
@@ -180,14 +205,14 @@ app.post("/userConnection", function (req, res){
 
 
 //	Operator connection page
-app.get("/opperatorLogin", function (req, res){
+app.get("/opperatorLogin",notConnected, function (req, res){
 	res.render("views/opperatorLogin", {});
 });
 
 
 
 //	Operator connection page
-app.post("/opperatorConnection", function (req, res){
+app.post("/opperatorConnection",notConnected, function (req, res){
 	var sess;
 	var email = req.body.email;
 	var password = req.body.password;
@@ -284,8 +309,20 @@ app.get("/userDisconnection", function (req,res,next){
 		}
 	})
 });
-
-
+//	User disconnection page
+app.get("/opperatorDisconnection", function (req,res,next){
+	//killing session
+	req.session.destroy(function (err){
+		if(err){
+			console.log(err);
+		}else{
+			res.redirect('/opperatorLogin');
+		}
+	})
+});
+app.get("test", function (req,res){
+	res.render("views/testingpage");
+})
 
 
 
