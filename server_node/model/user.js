@@ -8,8 +8,6 @@ function User (email, id, name, firstname, creationDate){
 
 }
 
-
-
 function Staff (email, id, name, firstname, creationDate){
 	this.base = User;
 	this.base(email, id, name, firstname, creationDate);

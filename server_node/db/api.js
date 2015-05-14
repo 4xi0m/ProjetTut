@@ -107,64 +107,59 @@ module.exports.addClient = addClient;
 
 
 function staffLogin(strEmail, strPassphrase, send_response){
-     var strQuery = "";
-     db_pool.getConnection( function ( objError, objConnection ){
-        if( objError ){
-           logerror('userLogin', 'connection error',objError );
-           send_response(objError, null);
+    var strQuery = "";
+    var connection = db.createConnection(connectparam);
+    connection.connect;
 
-        }else{
-            //strQuery = "select *  from user where email=" + "'" + strEmail + "' and " + "passphrase="+"'" + strPassphrase + "'";
-            strQuery = "select * from Staff where email=" + "'" + strEmail + "' and " + "passphrase="+"'" + strPassphrase + "'";
-            objConnection.query(
-                strQuery, 
-                function ( objError, objRows, objFields){
-                if( objError ){
-                    logerror('userLogin','query error',objError);
-                    send_response(objError, null);
-                }else{
-                    //console.log(objRows);
-                    if (objRows.length == 1) {
-                       //we found the dude
-                       name = objRows[0].name;
-                       email = objRows[0].email;
-                       foundUser = new users.Staff(email , name);
-                       send_response(null,foundUser);   
-                    }
+    strQuery = "select * from Staff where email=" + "'" + strEmail + "' and " + "passphrase="+"'" + strPassphrase + "'";
+    connection.query(
+        strQuery, 
+        function ( objError, objRows, objFields){
+            if( objError ){
+                logerror('userLogin','query error',objError);
+                send_response(objError, null);
+            }else{
+                //console.log(objRows);
+                if (objRows.length == 1) {
+                    //we found the dude
+                    name = objRows[0].name;
+                    email = objRows[0].email;
+                    foundUser = new users.Staff(email , name);
+                    send_response(null,foundUser);   
                 }
-            });
-        }
-        objConnection.release();
+            }
         });
+    connection.end();
+        
 }
 module.exports.staffLogin = staffLogin;
 
 function addStaff (strName, strFirstName, strEmail, strPassphrase, send_response){
     var strQuery = "";
-    var added_User;
+    var added_User = null;
     var strLogin = strEmail;
-    db_pool.getConnection( function ( objError, objConnection ){
-        if( objError ){
-           console.error("addUser "+objError);
-           send_response(objError, null);
-        }else{
-            var tmpStr = "'" + strLogin + "','" + strEmail + "','" + strName + "','" + strFirstName + "','" + strPassphrase +"'";
-            strQuery = "insert into Staff (login, email, name, firstName, passphrase) VALUES ("+ tmpStr +")";
-            console.log(strQuery);
+   
+    var connection = db.createConnection(connectparam);
+    connection.connect();
+    var tmpStr = "'" + strLogin + "','" + strEmail + "','" + strName + "','" + strFirstName + "','" + strPassphrase +"'";
+    
+    //query
+    strQuery = "insert into Staff (login, email, name, firstName, passphrase) VALUES ("+ tmpStr +")";
+    
 
-            objConnection.query(
-                strQuery,
-                function ( objError, objRows, objFields ){
-                    if( objError ){
-                        console.error("addUser bas "+objError);
-                        send_response(objError, null)
-                    }else{          
-                        added_User = new users.Client(strEmail, strName);
-                        send_response(null, added_User);
-                    }
-                });
-            objConnection.release();
-        }           
-    });
+    console.log(strQuery);
+
+    connection.query(
+        strQuery,
+        function ( objError, objRows, objFields ){
+            if( objError ){
+                console.error("addStaff"+objError);
+                send_response(objError, null)
+            }else{          
+                added_User = new users.Client(strEmail, strName);
+                send_response(null, added_User);
+            }
+        });
+    connection.end();
 }
 module.exports.addStaff = addStaff;
