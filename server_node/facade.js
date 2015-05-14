@@ -9,6 +9,12 @@ var bodyParser = require("body-parser");
 var $ = require('jquery');
 
 
+//config values
+var config_fields =require("./package.json").config;
+var server = config_fields.server_hosting;
+var server_port = config_fields.server_hosting_port;
+//console.log(server);
+
 //model
 
 var database = require("./db/api.js");
@@ -263,8 +269,8 @@ app.use(function(req, res, next){
 /*-------------Startup----------------*/
 
 
-var unicServer = app.listen(8000, function (){
-	console.log('ready on port 8000'.green);
+var unicServer = app.listen(server_port, function (){
+	console.log('ready on port '.green+server_port.green);
 });
 
 
