@@ -24,6 +24,7 @@
 		"server_hosting" : "localhost",
 		"server_hosting_port" : "8000",
 		"data_base" : {
+			"connected" : false,
 			"hosting" : "localhost",
 			"hosting_port": "3306",
 			"user_name" : "api",

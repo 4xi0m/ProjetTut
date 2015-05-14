@@ -50,11 +50,16 @@ var server_port = config_fields.server_hosting_port;
 ----------------------------------------------------------------------*/
 
 //for debug
-var database = require("./db/api.js");
+var database = require("./db/simulator.js");
+if(config_fields.data_base.connected){
+	database = require("./db/api.js");
+}
+
 var userClass = require("./model/user.js");
+
+
+
 var pendingCalls = new Array();
-
-
 
 
 

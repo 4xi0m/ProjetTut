@@ -1,5 +1,4 @@
 var users = require("../model/user.js");
-var crypto = require("crypto");
 var db          = require('mysql'); //This sets up the MySQL connection
 var db_pool     = db.createPool({
     host        : 'localhost',
