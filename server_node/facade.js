@@ -96,8 +96,7 @@ function notConnected (req, res, next){
 
 //	Home page
 app.get('/', notConnected , function (req, res, next){
-	res.render("views/home_page", {}});
-
+	res.render("views/home_page", {});
 });
 
 
