@@ -7,6 +7,8 @@ var app = express();
 
 
 
+
+
 app.set("view engine", "ejs");
 app.set("views", __dirname);								//+/view si on veux être propre
 app.use(bodyParser.urlencoded({extended: true})); 		   	// to support URL-encoded bodies
@@ -33,7 +35,7 @@ var server_port = config_fields.server_hosting_port;
 ---------------------------------MODEL---------------------------------
 ----------------------------------------------------------------------*/
 
-
+//for debug
 var database = require("./db/api.js");
 var userClass = require("./model/user.js");
 var pendingCalls = new Array();
@@ -136,6 +138,9 @@ app.post('/createAccount', notConnected, function (req , res ,next){
 		}else{
 			res.render("views/createAccount", {'error' : error});
 		}
+		if(error){
+			console.log(error);
+		}
 	}
 
 	//security and good checking
@@ -145,7 +150,7 @@ app.post('/createAccount', notConnected, function (req , res ,next){
 		res.render("views/createAccount", {'error' : 'deferent_pass'});
 	}else{
 		//enter in the data base
-		database.addClient(strName, strFirstName, strEmail, pass2, send_response);
+		database.addClient(strEmail, strName, strFirstName, pass2, send_response);
 	}	
 
 });
@@ -323,13 +328,14 @@ var unicServer = app.listen(server_port, function (){
 
 
 
+
 /*----------------------------------------------------------------------
 ---------------------------------WEBRTC---------------------------------
 ----------------------------------------------------------------------*/
 //code : Matthieu
 
 
-io = io.listen(app.listen(8000));
+io = io.listen(unicServer);
 
 
 io.sockets.on('connection', function (socket){
