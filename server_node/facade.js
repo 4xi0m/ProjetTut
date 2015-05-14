@@ -7,6 +7,8 @@ var app = express();
 
 
 
+
+
 app.set("view engine", "ejs");
 app.set("views", __dirname);								//+/view si on veux être propre
 app.use(bodyParser.urlencoded({extended: true})); 		   	// to support URL-encoded bodies
@@ -33,7 +35,7 @@ var server_port = config_fields.server_hosting_port;
 ---------------------------------MODEL---------------------------------
 ----------------------------------------------------------------------*/
 
-
+//for debug
 var database = require("./db/api.js");
 var userClass = require("./model/user.js");
 var pendingCalls = new Array();
