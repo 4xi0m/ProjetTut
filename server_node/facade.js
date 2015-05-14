@@ -1,12 +1,22 @@
-var compteur = 0;
-;
 var express = require('express');
 var sessions = require('express-session');
-var io = require('socket.io')
-var colors = require('colors');
-var app = express ();
 var bodyParser = require("body-parser");
-var $ = require('jquery');
+var io = require('socket.io');
+var colors = require('colors');
+var app = express();
+
+
+
+app.set("view engine", "ejs");
+app.set("views", __dirname);								//+/view si on veux être propre
+app.use(bodyParser.urlencoded({extended: true})); 		   	// to support URL-encoded bodies
+app.use(sessions({secret : 'secret'}));						//session use (not secure at all)
+app.use(express.static(__dirname + '/views'));				//static serving
+
+
+
+
+
 
 
 //config values
@@ -17,86 +27,98 @@ var server_port = config_fields.server_hosting_port;
 
 //model
 
+
+
+/*----------------------------------------------------------------------
+---------------------------------MODEL---------------------------------
+----------------------------------------------------------------------*/
+
+
 var database = require("./db/api.js");
 var userClass = require("./model/user.js");
+var pendingCalls = new Array();
 
 
-//call management
-var pendingAlerts = new Array();
 
 
-app.set("view engine", "ejs");
-app.set("views", __dirname);//+/view si on veux être propre
-
-//use
-app.use(bodyParser());
-
-//session use (not secure at all)
-app.use(sessions({secret : 'secret'}));
 
 
-//static serving
-app.use(express.static(__dirname + '/views'));
 
 
-function StaffIsAuthenticated(req,res,next){
+//
+//	User / staff authentification functions
+//
+
+function StaffIsAuthenticated(req, res, next){
     var sess = req.session;
     var staff_member_to_verify = sess.user;
-    //console.log("StaffIsAUtheenticated : "+staff_member_to_verify.staff);
-    if(staff_member_to_verify && staff_member_to_verify.staff){
-    	//console.log("staff member");
+    if(staff_member_to_verify && staff_member_to_verify.staff)	{
         next();
-    }else{
-        //authen failed 
+    }
+    //Authentification failed
+    else	{
         res.redirect("/");
     }
 }
 
-function ClientIsAuthenticated(req,res,next){
+function ClientIsAuthenticated(req, res, next){
     var sess = req.session;
     var client_to_verify = sess.user;
-    if(client_to_verify && client_to_verify.client){
-    	//console.log("client");
+    if(client_to_verify && client_to_verify.client)	{
         next();
-    }else{
-        //authen failed 
+    }
+    //Authentification failed
+    else{
         res.redirect("/");
     }
 }
-function notConnected (req,res,next){
+
+function notConnected (req, res, next){
 	var sess = req.session;
 	var user_to_verify = sess.user;
-	if(user_to_verify){
-		if( user_to_verify.client){
+	if(user_to_verify)	{
+		if( user_to_verify.client)	{
 			res.redirect("/help")
-		}else if(user_to_verify.staff){
+		}
+		else if(user_to_verify.staff)	{
 			res.redirect("/work_space")
 		}
-	}else{
-		next();
 	}
-    
-   	
+	else	{
+		next();
+	}   	
 }
 
 
 
-app.get('/', notConnected , function (req, res, next){
-	//var myitems = [ {id : "1" , desc : "food"},{id : "2", desc :"maman"}, {id : "3", desc :"toto"}];
-	res.render("views/home_page",{
-		/*title : "learning",
-		items : myitems*/
-	});
 
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+---------------------------------ROUTING---------------------------------
+----------------------------------------------------------------------*/
+
+
+//	Home page
+app.get('/', notConnected , function (req, res, next){
+	res.render("views/home_page", {});
 });
 
-/* createAccount on the app 
-Renders the creat Account page.
 
-*/
+
+//	Sign up page (1st visit)
 app.get('/createAccount', notConnected, function (req, res, next){
 	res.render("views/createAccount",{});
 });
+
+
+
+//	Sign up page (form filled)
 app.post('/createAccount', notConnected, function (req , res ,next){
 	var sess;
 	var b = req.body;
@@ -129,6 +151,8 @@ app.post('/createAccount', notConnected, function (req , res ,next){
 });
 
 
+
+//	User connection page
 app.post("/userConnection", function (req, res){
 	var sess;
 	var email = req.body.email;
@@ -152,9 +176,17 @@ app.post("/userConnection", function (req, res){
 	//ask data base 
 	database.clientLogin(email, password, send_response);	
 });
+
+
+
+//	Operator connection page
 app.get("/opperatorLogin", function (req, res){
 	res.render("views/opperatorLogin", {});
 });
+
+
+
+//	Operator connection page
 app.post("/opperatorConnection", function (req, res){
 	var sess;
 	var email = req.body.email;
@@ -180,12 +212,15 @@ app.post("/opperatorConnection", function (req, res){
 });
 
 
+
+//	Staff sign up page (1st visit)
 //en téhorie il faut être connceté non en staff ? 
 app.get("/addOpperator",function (req, res){
 	res.render("views/addOpperator", {});
 });
 
 
+//	Staff sign up page (form filled)
 app.post("/addOpperator", function (req, res){
 	var sess;
 	var b = req.body;
@@ -218,15 +253,17 @@ app.post("/addOpperator", function (req, res){
 
 
 
-
-//Staff functions 
+//	Staff workspace page
 app.get("/work_space", StaffIsAuthenticated, function (req, res, next){
 	var staff_member = req.session.user;
 	res.render("views/work_space",{
 		staff_member : staff_member
 	});
 });
-//Staff functions 
+
+
+
+//	Client page 
 app.get("/help", ClientIsAuthenticated, function (req, res, next){
 	var client = req.session.user;
 	res.render("views/help",{
@@ -235,6 +272,8 @@ app.get("/help", ClientIsAuthenticated, function (req, res, next){
 });
 
 
+
+//	User disconnection page
 app.get("/userDisconnection", function (req,res,next){
 	//killing session
 	req.session.destroy(function (err){
@@ -245,6 +284,11 @@ app.get("/userDisconnection", function (req,res,next){
 		}
 	})
 });
+
+
+
+
+
 
 /*-----------Error handeling----------*/
 /*
@@ -285,45 +329,51 @@ var unicServer = app.listen(server_port, function (){
 //code : Matthieu
 
 
-/*TODO : 
-0)what is the 'client' filled ? what is it concretly? 
-
-1)What happends when a oppérator connects after client asked help
-2)Work on socket disconnection.
-3)Localy store the the in comming calls ?
-
-
-
-*/
-io = io.listen(unicServer);
+io = io.listen(app.listen(8000));
 
 
 io.sockets.on('connection', function (socket){
 
 	var room = '';
+	var peersNumber = 0;
 
 
 	socket.on('askForHelp', function (client){
-		console.log('help asked');
-		room = client;  //<== want is this ?
-		socket.join(room);
-		socket.broadcast.emit('helpAsked', room);
+		if(peersNumber == 0)	{
+			console.log('help asked');
+			room = client;					//	client = room name (md5(md5(client_mail) + timestamp))
+			peersNumber++;
+			pendingCalls.push(client);
+			socket.join(room);
+			socket.broadcast.emit('helpAsked', room);
+		}
+		else	{
+			console.log('Error : too many peers in the room');
+		}
 	});
 
 
 
 	socket.on('help', function (client){
-		console.log('help offered');
-		room = client;
-		socket.join(room);
-		socket.in(room).emit('helpOffered', room);
+		if(peersNumber == 1)	{
+			console.log('help offered');
+			room = client;
+			peersNumber++;
+			socket.join(room);
+			socket.in(room).emit('helpOffered', room);
+		}
+		else	{
+			console.log('Error : the client is already helped by another operator');
+		}
 	});
+
 
 
 	socket.on('RTCOffer', function (sessionDescription){
-		console.log('RTC offer'); 
-		socket.in(room).emit('RTCOffer', sessionDescription);//<== what is sessionDescription?
+		console.log('RTC offer');
+		socket.in(room).emit('RTCOffer', sessionDescription);
 	});
+
 
 
 	socket.on('RTCAnswer', function (sessionDescription){
@@ -332,9 +382,18 @@ io.sockets.on('connection', function (socket){
 	});
 
 
+
 	socket.on('iceCandidate', function (ice){
 		console.log('ice');
 		socket.in(room).emit('iceCandidate', ice);
 	});
 
+
+
+	socket.on('stopConnection', function(e)	{
+		console.log('Session terminated');
+		room = '';
+		peersNumber = 0;
+		socket.in(room).emit('stopConnection');
+	});
 });

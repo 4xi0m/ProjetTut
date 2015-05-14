@@ -55,7 +55,10 @@ function helpOfferedHandler(client){
 
 
 
+
+window.onbeforeunload = rtc.stop;
 helpButton.onclick = askForHelpHandler;
 socket.on('helpOffered', helpOfferedHandler);
 socket.on('RTCAnswer', rtc.processAnswer);
 socket.on('iceCandidate', rtc.addIceCandidate);
+socket.on('stopConnection', rtc.stop);

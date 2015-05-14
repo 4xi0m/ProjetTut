@@ -21,7 +21,7 @@ var WebRTC = function()	{
 
 
 		getUserMedia: function(successHandler)	{
-			getUserMedia(
+			navigator.getUserMedia(
 
 				private.constraints,
 
@@ -100,9 +100,16 @@ var WebRTC = function()	{
 		addIceCandidate: function(ice)	{
 			var candidate = new RTCIceCandidate({sdpMLineIndex:ice.label, candidate:ice.candidate});
 			private.pc.addIceCandidate(candidate);
+		},
+
+
+
+		stop: function()	{
+			if(private.pc) {
+				private.pc.close();
+			}
+			private.pc = null;
 		}
-
-
 	};
 
 	return public;

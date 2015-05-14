@@ -66,6 +66,8 @@ function insertClient(client)	{
 
 
 
+window.onbeforeunload = rtc.stop;
 socket.on('helpAsked', insertClient);
 socket.on('iceCandidate', rtc.addIceCandidate);
 socket.on('RTCOffer', RTCOfferHandler);
+socket.on('stopConnection', rtc.stop);
