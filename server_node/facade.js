@@ -323,13 +323,14 @@ var unicServer = app.listen(server_port, function (){
 
 
 
+
 /*----------------------------------------------------------------------
 ---------------------------------WEBRTC---------------------------------
 ----------------------------------------------------------------------*/
 //code : Matthieu
 
 
-io = io.listen(app.listen(8000));
+io = io.listen(unicServer);
 
 
 io.sockets.on('connection', function (socket){
