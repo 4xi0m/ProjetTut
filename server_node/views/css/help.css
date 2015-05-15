@@ -1,0 +1,45 @@
+.localVideo
+{
+	height: 55vh;
+	position: absolute;
+    top:0;
+    bottom: 20vh;
+    left: 0;
+    right: 0;
+     margin: auto;
+
+}
+
+.remoteVideo
+{
+	height: 20vh;
+	width: 35vw;
+	position: absolute;
+    top:0;
+    bottom: -59vh;
+    left: 0;
+    right: 0;
+
+    margin: auto;
+    background-color: black;
+}
+
+.hangup
+{
+	height: 8vh;
+	width: 40vw;
+	font-size: 4vh;
+	position: absolute;
+	bottom: 2vh;
+	left: 55vw;
+}
+
+.help
+{	
+	height: 8vh;
+	width: 40vw;
+	font-size: 4vh;
+	position: absolute;
+	bottom: 2vh;
+	left: 5vw;
+}

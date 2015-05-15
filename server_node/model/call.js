@@ -1,15 +1,15 @@
-function Call (){
-	this.startTime;
-	this.endTime;
-	this.client;
-	this.staff;
-	this.comment;
-	this.id;
-	this.location;
-	this.waitTime;
+function Call (strStartTime, strEndTime, strUserId, strStaffId, strComment, id, strLocation, strWaitTime){
+	this.startTime = strStartTime;
+	this.endTime = strEndTime;
+	this.client = strUserId;
+	this.staff = strStaffId;
+	this.comment = strComment;
+	this.id = id;
+	this.location= strLocation;
+	this.waitTime = strWaitTime;
 }
 Call.prototype.toString = function (){
-	return "Call == from:"+startTime+", to: "+endTime;
+	return "Call == from:"+this.startTime+", to: "+this.endTime;
 }
 Call.prototype.startCall = function (startTime){
 	this.startTime = startTime;
@@ -18,5 +18,5 @@ Call.prototype.endCall = function (endTime, comment){
 	this.endTime = endTime;
 	this.comment = comment;
 }
-module.export.Call = Call;
+module.exports.Call = Call;
 
