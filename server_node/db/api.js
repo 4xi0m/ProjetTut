@@ -176,8 +176,36 @@ function addStaff (strName, strFirstName, strEmail, strPassphrase, send_response
 module.exports.addStaff = addStaff;
 
 /**Store in the database finished calles
+example for datatime: 2015-05-13 12:00
 */
-function stroreCallFinished (callback){
+function storeCallFinished (strUserId, strStaffId, strStartTime, strEndTime, strComment, strWaitTime, strLocation, send_response){
+    var strQuery = "";
+    var addedCall = null;
+    var connection = db.createConnection(connectparam);
+    connection.connect();
+
+    //creating the query
+    strpreQuery = "insert into CallRecord (start_time, user_id, comment, staff_id, end_time, location, wait_time)";
+    strValues = "values ('" +strStartTime+ "'," +strUserId+ ",'" +strComment+ "'," +strStaffId+ ",'" +strEndTime+ "','" +strLocation+ "','" + strWaitTime +"';";
+    strGetResIDQuery = "select id from CallRecord where strStartTime =" + "'" + strStartTime + "', strUserId=" +strUserId + ";";
+    strQuery = strpreQuery + strValues + strGetResIDQuery;
+    console.log(strQuery);
+
+    //executing the query and returning the result
+    connection.query(
+        strQuery,
+        function(objError, objRows, objFields){
+            if (objError){
+                console.error("storeCallFinished Error" + objError);
+                send_response(objError, null);
+            }else{
+                if(objRows[0][0]){
+                    
+                }
+            }
+        }
+
+        )
 
 
 }module.exports.stroreCallFinished = stroreCallFinished;
