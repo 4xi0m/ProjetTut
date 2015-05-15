@@ -128,14 +128,14 @@ function notConnected (req, res, next){
  */
 app.get('/apiTest', notConnected, function (req, res, next){
 	console.log(req.url);
-	var send_response = function (error, queryRes){
+	var send_response = function (queryRes, error){
 		if (queryRes){
 			console.log("Got");
-			console.log(queryRes);
+			//console.log(queryRes);
 			res.send(queryRes);
 		}
 		if(error){
-			console.log(error);
+			//console.log(error);
 			res.send("Error: " + error);
 		}
 	};
@@ -147,8 +147,10 @@ app.get('/apiTest', notConnected, function (req, res, next){
 	//database.storeCallFinished("2", "2", "2015-05-13 12:00", "2015-05-13 12:10", "No Comment", 10, "phone", send_response); //Tested
 	//database.getCallById(10, send_response);//Tested!!
     //database.updateCallComment("Yes Comment", 20, send_response); //Tested
-    //database.updateCallEndTime("2015-05-13 18:00", 20, send_response);
-    database.GetCallsByUserId(2, send_response);
+    //database.updateCallEndTime("2015-05-13 18:00", 20, send_response); //tested
+    //database.GetCallsByUserId(2, send_response); //tested
+    //database.updateUserFirstName("test@test.fr", "new first name",send_response); //tested
+    database.updateUserPassword("test@test.fr", "newpassword",send_response); 
 	//res.type('txt').send('test2');
 });
 

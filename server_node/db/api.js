@@ -321,17 +321,96 @@ function GetCallsByUserId(userId, send_response)
                 send_response(objError, null);
             }else{
                 var callList = [];
-                console.log(objRows[0]);
+                //console.log(objRows[0]);
                 for(data in objRows){
                     call = new calls.Call(objRows[0].start_time, objRows[0].end_time, objRows[0].client_id, objRows[0].staff_id, objRows[0].comment, objRows[0].id, objRows[0].location,objRows[0].wait_time);
                     callList.push(call);
                 }
-                console.log(callList);
-                send_response(callList, "0");
+                //console.log(callList);
+                send_response(callList, objError);
             }
         }
     );
     connection.end();
 }module.exports.GetCallsByUserId = GetCallsByUserId;
 
+/* Change the password of a user by email adress
+*/
 
+function updateUserPassword(email, passphrase, send_response)
+{    
+    var connection = db.createConnection(connectparam);
+    connection.connect();
+
+    var time = "select date_created into @a from user where email ='" + email+ "';";
+    var hashpass = "select md5('"+ passphrase+"') into @b;";
+    var hashadtime = "select concat(@a, @b) into @c; ";
+    var strQuery = "update User set passphrase = md5(@c) where email ='" +email+ "'";
+    console.log(time + hashpass + hashadtime + strQuery);
+
+    connection.query(
+        time + hashpass + hashadtime + strQuery,
+        function(objError, objRows, objFields){
+            if(objError){
+                console.error("updateUserPassword Failed " + objError);
+                send_response(objError, null);
+            }else{
+                var callList = [];
+                console.log(objRows);
+                send_response("0", objError);
+            }
+        }
+    );
+    connection.end();
+}module.exports.updateUserPassword = updateUserPassword;
+
+/* Change the nane of a user by email adress
+*/
+function updateUserName(email, name, send_response)
+{    
+    var connection = db.createConnection(connectparam);
+    connection.connect();
+    var strQuery = "update User set name = '" +name + "'where email ='" +email+ "'";
+    console.log(strQuery);
+
+    connection.query(
+        strQuery,
+        function(objError, objRows, objFields){
+            if(objError){
+                console.error("updateUserName Failed " + objError);
+                send_response(objError, null);
+            }else{
+                var callList = [];
+                console.log(objRows);
+                send_response("0", objError);
+            }
+        }
+    );
+    connection.end();
+}module.exports.updateUserName = updateUserName;
+
+
+/* Change the firstname of a user by email adress
+*/
+function updateUserFirstName(email, firstname, send_response)
+{    
+    var connection = db.createConnection(connectparam);
+    connection.connect();
+    var strQuery = "update User set first_name = '" + firstname + "'where email ='" +email+ "'";
+    console.log(strQuery);
+
+    connection.query(
+        strQuery,
+        function(objError, objRows, objFields){
+            if(objError){
+                console.error("updateUserFirstName Failed " + objError);
+                send_response(objError, null);
+            }else{
+                var callList = [];
+                console.log(objRows);
+                send_response("0", objError);
+            }
+        }
+    );
+    connection.end();
+}module.exports.updateUserFirstName = updateUserFirstName;
