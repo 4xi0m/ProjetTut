@@ -29,8 +29,9 @@
 			"connected" : true,
 			"hosting" : "localhost",
 			"hosting_port": "3306",
-			"user_name" : "api",
-			"passphrase" : ""
+			"database": "test",
+			"user_name" : "root",
+			"passphrase" : "root"
 		},
 		"session":{
 			"resave" : false,

@@ -1,17 +1,18 @@
 var users = require("../model/user.js");
 var calls = require("../model/call.js");
+var config_values = require("../package.json").config.data_base;
+var db_host = config_values.hosting;
+var db_port = config_values.hosting_port;
+var db_database = config_values.database;
+var db_user = config_values.user_name;
+var db_pass = config_values.passphrase;
 var db          = require('mysql'); //This sets up the MySQL connection
-var db_pool     = db.createPool({
-    host        : 'localhost',
-    database    : 'WebRTC',
-    user        : 'root',
-    password    : ''
-});
+
 var connectparam = {
-        host        : 'localhost',
-        database    : 'test',
-        user        : 'root',
-        password    : 'root',
+        host        : db_host,
+        database    : db_database,
+        user        : db_user,
+        password    : db_pass,
         multipleStatements: true
 };
 var foundUser;
