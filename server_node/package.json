@@ -3,24 +3,25 @@
 	"version" : "0.0.2",
 	"private" :true,
 	"description" : "Developping a webRTC help solution",
-	"homepage" : "http://nopage.com",
+	"homepage" : "",
 	"liense " : {"license" : "MIT"},
 	"bugs" : {
-		"url" : "http://nopage.com/bugs",
-		"email" : "noone@nopage.com"
+		"url" : "",
+		"email" : ""
 	},
 	"author" : {
-		"name": "TB",
-		"email" : "tb@tb.tb",
-		"url" : "http://tb.tb"
+		"name": "",
+		"email" : "",
+		"url" : ""
 	},
 	"contributors" : {},
 	"main" : "facade.js",
 	"repository" : {
 		"type" : "git",
-		"url" : "http://nopage.com"
+		"url" : "https://github.com/tristob/ProjetTut.git"
 	},
 	"config" : {
+		"secure_http" : false,
 		"server_hosting" : "localhost",
 		"server_hosting_port" : "8000",
 		"data_base" : {

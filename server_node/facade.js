@@ -9,8 +9,12 @@ var config_fields =require("./package.json").config;
 
 
 
+
 //app config
-app.use(bodyParser());
+// body parser
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+//view engine and static pages
 app.set("view engine", "ejs");
 app.set("views", __dirname);								//+/view si on veux être propre
 app.use(express.static(__dirname + '/views'));				//static serving
@@ -349,10 +353,29 @@ app.use(function(req, res, next){
 
 /*-------------Startup----------------*/
 
+//creating server 
+var unicServer;
+if(config_fields.secure_http){
+	var fs = require('fs');
+	var https = require('https');
+	var privateKey  = fs.readFileSync('./security/server.key', 'utf8');
+	var certificate = fs.readFileSync('./security/server.crt', 'utf8');
+	var credentials = {key: privateKey, cert: certificate};
+	var httpsServer = https.createServer(credentials, app);
+	httpsServer.listen(server_port);
+	console.log('Ready to serve on https at port : '.green+server_port.green);
+	
 
-var unicServer = app.listen(server_port, function (){
-	console.log('ready on port '.green+server_port.green);
-});
+}else{
+	unicServer = app.listen(server_port, function (){
+	console.log('Ready to serve on http at port : '.green+server_port.green);
+	});
+
+}
+
+
+
+
 
 
 
