@@ -1,17 +1,18 @@
 var users = require("../model/user.js");
 var calls = require("../model/call.js");
+var config_values = require("../package.json").config.data_base;
+var db_host = config_values.hosting;
+var db_port = config_values.hosting_port;
+var db_database = config_values.database;
+var db_user = config_values.user_name;
+var db_pass = config_values.passphrase;
 var db          = require('mysql'); //This sets up the MySQL connection
-var db_pool     = db.createPool({
-    host        : 'localhost',
-    database    : 'WebRTC',
-    user        : 'root',
-    password    : ''
-});
+
 var connectparam = {
-        host        : 'localhost',
-        database    : 'WebRTC',
-        user        : 'root',
-        password    : '',
+        host        : db_host,
+        database    : db_database,
+        user        : db_user,
+        password    : db_pass,
         multipleStatements: true
 };
 var foundUser;
@@ -41,13 +42,13 @@ function clientLogin (strEmail, strPassphrase, send_response){
     var timeAndId = "select date_created, id from user where email='"+strEmail+"' into @time, @id;";
     var hash1 = "select md5('"+strPassphrase+"') into @hash1;"
     var hash2 = "select concat(@time,@hash1) into @hash2;";
-    var query = "select id from user where id=@id and passphrase=md5(@hash2);";
+    var query = "select * from user where id=@id and passphrase=md5(@hash2);";
     strQuery =timeAndId+hash1+hash2+query;
     console.log(strQuery);
     connection.query(
         strQuery, 
         function ( objError, objRows, objFields){
-            console.log(objRows);
+            //console.log(objRows);
             if( objError ){
                 logerror('userLogin','query error',objError);
                 send_response(objError, null);
@@ -122,7 +123,7 @@ function staffLogin(strEmail, strPassphrase, send_response){
     connection.query(
         strQuery, 
         function ( objError, objRows, objFields){
-            console.log(objRows);
+            //console.log(objRows);
             if( objError ){
                 logerror('userLogin','query error',objError);
                 send_response(objError, null);
