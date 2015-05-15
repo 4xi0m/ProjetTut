@@ -358,9 +358,10 @@ var unicServer;
 if(config_fields.secure_http){
 	var fs = require('fs');
 	var https = require('https');
-	var privateKey  = fs.readFileSync('./security/server.key', 'utf8');
-	var certificate = fs.readFileSync('./security/server.crt', 'utf8');
-	var credentials = {key: privateKey, cert: certificate};
+	var privateKey  = fs.readFileSync('./security/key.pem', 'utf8');
+	var autority = fs.readFileSync('./security/csr.pem', 'utf8')
+	var certificate = fs.readFileSync('./security/cert.pem', 'utf8');
+	var credentials = {key: privateKey, ca: autority, cert: certificate};
 	var httpsServer = https.createServer(credentials, app);
 	httpsServer.listen(server_port);
 	console.log('Ready to serve on https at port : '.green+server_port.green);
