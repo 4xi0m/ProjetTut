@@ -36,7 +36,6 @@ function clientLogin (strEmail, strPassphrase, send_response){
     var connection = db.createConnection(connectparam);
     connection.connect();
 
-    console.log("bofore query");
     var timeAndId = "select date_created, id from user where email='"+strEmail+"' into @time, @id;";
     var hash1 = "select md5('"+strPassphrase+"') into @hash1;"
     var hash2 = "select concat(@time,@hash1) into @hash2;";
@@ -52,7 +51,6 @@ function clientLogin (strEmail, strPassphrase, send_response){
             }else{
                 if (objRows[3][0]) {//3 because we have 4 queries 
                     var foundUser =objRows[3][0];
-                    console.log("query success: "+foundUser);
                     email = foundUser.email;
                     id = foundUser.id;
                     name = foundUser.name;
