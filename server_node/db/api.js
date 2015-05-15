@@ -3,14 +3,14 @@ var db          = require('mysql'); //This sets up the MySQL connection
 var db_pool     = db.createPool({
     host        : 'localhost',
     database    : 'test',
-    user        : 'api',
-    password    : ''
+    user        : 'root',
+    password    : 'root'
 });
 var connectparam = {
         host        : 'localhost',
         database    : 'test',
-        user        : 'api',
-        password    : '',
+        user        : 'root',
+        password    : 'root',
         multipleStatements: true
 };
 var foundUser;
@@ -36,7 +36,7 @@ function clientLogin (strEmail, strPassphrase, send_response){
     var connection = db.createConnection(connectparam);
     connection.connect();
 
-    var timeAndId = "select dateCreated, id from user where email='"+strEmail+"' into @time, @id;";
+    var timeAndId = "select date_created, id from user where email='"+strEmail+"' into @time, @id;";
     var hash1 = "select md5('"+strPassphrase+"') into @hash1;"
     var hash2 = "select concat(@time,@hash1) into @hash2;";
     var query = "select * from user where id=@id and passphrase=md5(@hash2);";
@@ -54,8 +54,8 @@ function clientLogin (strEmail, strPassphrase, send_response){
                     email = foundUser.email;
                     id = foundUser.id;
                     name = foundUser.name;
-                    firstName = foundUser.firstName;
-                    creationDate = foundUser.dateCreated; 
+                    firstName = foundUser.first_name;
+                    creationDate = foundUser.date_created; 
                     foundUser = new users.Client(email,id,name,firstName,creationDate);                       
                 }
                 send_response(null,foundUser);
@@ -80,9 +80,9 @@ function addClient (strEmail, strName, strFirstName, strPassphrase, send_respons
     var time = "select now() into @a;"
     var hashpass = "select md5('"+strPassphrase+"') into @b;";
     var hashadtime = "select concat(@a, @b) into @c; ";
-    var prepquery =  "insert into User (email, name, firstName, passphrase, dateCreated)";
+    var prepquery =  "insert into User (email, name, first_name, passphrase, date_created)";
     var values = "values ('"+strEmail+"','"+strName+"','"+strFirstName+"',md5(@c), @a);";   
-    var id = "select id, dateCreated from user where email='"+strEmail+"';"  
+    var id = "select id, date_created from user where email='"+strEmail+"';"  
     strQuery = time+hashpass+hashadtime+prepquery+values+id;
     
     connection.query(
@@ -94,7 +94,7 @@ function addClient (strEmail, strName, strFirstName, strPassphrase, send_respons
             }else{ 
                 //sending the response 
                 if(objRows[4][0]){
-                   added_User = new users.Client(strEmail,objRows[4][0].id,strName,strFirstName,objRows[4][0].dateCreated); 
+                   added_User = new users.Client(strEmail,objRows[4][0].id,strName,strFirstName,objRows[4][0].date_created); 
                 }                   
                 send_response(null, added_User);
             }
@@ -110,7 +110,7 @@ function staffLogin(strEmail, strPassphrase, send_response){
     var connection = db.createConnection(connectparam);
     connection.connect;
 
-    var timeAndId = "select dateCreated, id from staff where email='"+strEmail+"' into @time, @id;";
+    var timeAndId = "select date_created, id from staff where email='"+strEmail+"' into @time, @id;";
     var hash1 = "select md5('"+strPassphrase+"') into @hash1;"
     var hash2 = "select concat(@time,@hash1) into @hash2;";
     var query = "select * from staff where id=@id and passphrase=md5(@hash2);";
@@ -127,8 +127,8 @@ function staffLogin(strEmail, strPassphrase, send_response){
                     email = foundUser.email;
                     id = foundUser.id;
                     name = foundUser.name;
-                    firstName = foundUser.firstName;
-                    creationDate = foundUser.dateCreated; 
+                    firstName = foundUser.first_name;
+                    creationDate = foundUser.date_created; 
                     foundUser = new users.Staff(email,id,name,firstName,creationDate);                       
                 }
                 send_response(null,foundUser);                
@@ -141,20 +141,16 @@ module.exports.staffLogin = staffLogin;
 
 function addStaff (strName, strFirstName, strEmail, strPassphrase, send_response){
     var strQuery = "";
-    var added_staff = null;
-    var strLogin = strEmail;
-   
+    var added_staff = null;  
     var connection = db.createConnection(connectparam);
     connection.connect();
-    var tmpStr = "'" + strLogin + "','" + strEmail + "','" + strName + "','" + strFirstName + "','" + strPassphrase +"'";
-    
     //query
     var time = "select now() into @a;"
     var hashpass = "select md5('"+strPassphrase+"') into @b;";
     var hashadtime = "select concat(@a, @b) into @c; ";
-    var prepquery =  "insert into Staff (email, name, firstName, passphrase, dateCreated)";
+    var prepquery =  "insert into Staff (email, name, first_name, passphrase, date_created)";
     var values = "values ('"+strEmail+"','"+strName+"','"+strFirstName+"',md5(@c), @a);";   
-    var id = "select id, dateCreated from user where email='"+strEmail+"';"  
+    var id = "select id, date_created from Staff where email='"+strEmail+"';"  
     strQuery = time+hashpass+hashadtime+prepquery+values+id;
     console.log(strQuery);
 
@@ -166,7 +162,7 @@ function addStaff (strName, strFirstName, strEmail, strPassphrase, send_response
                 send_response(objError, null)
             }else{
                 if(objRows[4][0]){//well added
-                    added_staff = new users.Staff(strEmail,objRows[4][0].id, strName, strFirstName,objRows[4][0].dateCreated);
+                    added_staff = new users.Staff(strEmail,objRows[4][0].id, strName, strFirstName,objRows[4][0].date_created);
                 }               
                 send_response(null, added_staff);
             }
