@@ -124,6 +124,35 @@ function notConnected (req, res, next){
 ---------------------------------ROUTING---------------------------------
 ----------------------------------------------------------------------*/
 
+/*this is a route for testing db api
+ */
+app.get('/apiTest', notConnected, function (req, res, next){
+	console.log(req.url);
+	var send_response = function (error, queryRes){
+		if (queryRes){
+			console.log("Got");
+			console.log(queryRes);
+			res.send(queryRes);
+		}
+		if(error){
+			console.log(error);
+			res.send("Error: " + error);
+		}
+	};
+
+	//database.clientLogin("a@a.ab","password",send_response); // Not work, even with mysql returnning result, objRows is always empty
+	//database.addClient("tes1t@test.fr", "test", "test", "passwordtest", send_response); //TESTED!
+	//database.addStaff("staff1", "staff1", "staff@a.a","password", send_response);//Tested!
+	//database.staffLogin("staff@a.a","password", send_response); //Not workings same as clientLogin
+	//database.storeCallFinished("2", "2", "2015-05-13 12:00", "2015-05-13 12:10", "No Comment", 10, "phone", send_response); //Tested
+	//database.getCallById(10, send_response);//Tested!!
+    //database.updateCallComment("Yes Comment", 20, send_response); //Tested
+    //database.updateCallEndTime("2015-05-13 18:00", 20, send_response);
+    database.GetCallsByUserId(2, send_response);
+	//res.type('txt').send('test2');
+});
+
+
 
 //	Home page
 app.get('/', notConnected , function (req, res, next){
