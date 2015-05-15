@@ -7,7 +7,7 @@
 #
 # Hôte: localhost (MySQL 5.6.23)
 # Base de données: WebRTC
-# Temps de génération: 2015-05-14 20:19:55 +0000
+# Temps de génération: 2015-05-15 14:21:51 +0000
 # ************************************************************
 
 
@@ -37,8 +37,8 @@ CREATE TABLE `CallRecord` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `staff_id` (`staff_id`),
-  CONSTRAINT `callrecord_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `callrecord_ibfk_2` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`id`)
+  CONSTRAINT `callrecord_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`id`),
+  CONSTRAINT `callrecord_ibfk_2` FOREIGN KEY (`staff_id`) REFERENCES `Staff` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 LOCK TABLES `CallRecord` WRITE;
@@ -46,7 +46,20 @@ LOCK TABLES `CallRecord` WRITE;
 
 INSERT INTO `CallRecord` (`start_time`, `user_id`, `comment`, `staff_id`, `end_time`, `id`, `location`, `wait_time`)
 VALUES
-	('2015-05-13 12:00:00',2,'test',2,'2015-05-13 12:12:00',3,'phone',120);
+	('2015-05-13 12:00:00',2,'No Comment',2,'2015-05-13 12:10:00',8,'phone',10),
+	('2015-05-13 12:00:00',2,'No Comment',2,'2015-05-13 12:10:00',9,'phone',10),
+	('2015-05-13 12:00:00',2,'No Comment',2,'2015-05-13 12:10:00',10,'phone',10),
+	('2015-05-13 12:00:00',2,'No Comment',2,'2015-05-13 12:10:00',11,'phone',10),
+	('2015-05-13 12:00:00',2,'No Comment',2,'2015-05-13 12:10:00',12,'phone',10),
+	('2015-05-13 12:00:00',2,'No Comment',2,'2015-05-13 12:10:00',13,'phone',10),
+	('2015-05-13 12:00:00',2,'No Comment',2,'2015-05-13 12:10:00',14,'phone',10),
+	('2015-05-13 12:00:00',2,'No Comment',2,'2015-05-13 12:10:00',15,'phone',10),
+	('2015-05-13 12:00:00',2,'No Comment',2,'2015-05-13 12:10:00',16,'phone',10),
+	('2015-05-13 12:00:00',2,'No Comment',2,'2015-05-13 12:10:00',17,'phone',10),
+	('2015-05-13 12:00:00',2,'No Comment',2,'2015-05-13 12:10:00',18,'phone',10),
+	('2015-05-13 12:00:00',2,'No Comment',2,'2015-05-13 12:10:00',19,'phone',10),
+	('2015-05-13 12:00:00',2,'Yes Comment',2,'2015-05-13 18:00:00',20,'phone',10),
+	('2015-05-13 12:00:00',2,'No Comment',2,'2015-05-13 12:10:00',21,'phone',10);
 
 /*!40000 ALTER TABLE `CallRecord` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -61,7 +74,7 @@ CREATE TABLE `Staff` (
   `email` varchar(100) NOT NULL DEFAULT '',
   `name` varchar(50) NOT NULL DEFAULT '',
   `first_name` varchar(50) NOT NULL DEFAULT '',
-  `passphrase` binary(16) NOT NULL,
+  `passphrase` varchar(32) NOT NULL DEFAULT '',
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `date_created` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -73,7 +86,8 @@ LOCK TABLES `Staff` WRITE;
 
 INSERT INTO `Staff` (`email`, `name`, `first_name`, `passphrase`, `id`, `date_created`)
 VALUES
-	('admin@admin.fr','admin','admin',X'31323334353600000000000000000000',2,'2015-05-12 00:00:00');
+	('admin@admin.fr','admin','admin','123456\0\0\0\0\0\0\0\0\0\0',2,'2015-05-12 00:00:00'),
+	('staff@a.a','staff1','staff1','d1677c6faed893b983ee5057cb66e851',3,'2015-05-15 15:24:04');
 
 /*!40000 ALTER TABLE `Staff` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -100,7 +114,9 @@ LOCK TABLES `User` WRITE;
 
 INSERT INTO `User` (`email`, `name`, `first_name`, `id`, `passphrase`, `date_created`)
 VALUES
-	('a@a.a','a','a',2,'3ad550c0a82e2a4ce1ad83c612cf602a','2015-05-12 21:53:08');
+	('a@a.a','a','a',2,'1e778afe62f3e846a1e234b8dc8f3233','2015-05-12 21:53:08'),
+	('test@test.fr','test','test',3,'a3de45ef8521ca59050a8513e8b6f9d8','2015-05-15 14:44:07'),
+	('tes1t@test.fr','test','test',11,'372b029a899019b340d95530349151ec','2015-05-15 14:48:56');
 
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 UNLOCK TABLES;
