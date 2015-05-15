@@ -21,9 +21,10 @@
 		"url" : "https://github.com/tristob/ProjetTut.git"
 	},
 	"config" : {
-		"secure_http" : true,
+		"secure_http" : false,
 		"server_hosting" : "localhost",
 		"server_hosting_port" : "8000",
+		"server_hosting_port_secure" : "8443",
 		"data_base" : {
 			"connected" : true,
 			"hosting" : "localhost",

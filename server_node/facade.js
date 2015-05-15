@@ -13,7 +13,7 @@ var config_fields =require("./package.json").config;
 //app config
 // body parser
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 //view engine and static pages
 app.set("view engine", "ejs");
 app.set("views", __dirname);								//+/view si on veux être propre
@@ -43,6 +43,7 @@ try{
 //config values
 var server = config_fields.server_hosting;
 var server_port = config_fields.server_hosting_port;
+var server_port_secure = config_fields.server_hosting_port_secure;
 //console.log(server);
 
 //model
@@ -385,6 +386,10 @@ app.use(function(req, res, next){
 //creating server 
 var unicServer;
 if(config_fields.secure_http){
+
+	//redirecting server 
+	//if time 
+	
 	var fs = require('fs');
 	var https = require('https');
 	var privateKey  = fs.readFileSync('./security/key.pem', 'utf8');
@@ -392,7 +397,7 @@ if(config_fields.secure_http){
 	var certificate = fs.readFileSync('./security/cert.pem', 'utf8');
 	var credentials = {key: privateKey, ca: autority, cert: certificate};
 	var httpsServer = https.createServer(credentials, app);
-	httpsServer.listen(server_port);
+	unicServer = httpsServer.listen(server_port_secure);
 	console.log('Ready to serve on https at port : '.green+server_port.green);
 	
 
