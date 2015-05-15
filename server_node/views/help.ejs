@@ -3,13 +3,19 @@
     <head>
         <meta charset="utf-8" />
         <title>CLIENT</title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+         <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
     </head>
  
     <body>
-        <h1>ASKING page</h1>
         <h2>Client : <%=client.name%> </h2>
         
-        <button id='help'>Ask for help</button>
+        <button id='help' class="btn btn-default">Ask for help</button>
 
 
         <!--  CONFERENCE PART   -->
@@ -17,7 +23,7 @@
       <table>
         <tr>
           <td>
-            <video height="300" id="localVideo" autoplay></video>
+            <video id="localVideo" autoplay></video>
           </td>
           <td>
             <video id="remoteVideo" autoplay></video>
@@ -27,9 +33,9 @@
         <tr>
           <td align="center">
 
-            <button id="startButton">Start</button>
-            <button id="callButton">Call</button>
-            <button id="hangupButton">Hang Up</button>
+            <button id="startButton" class="btn btn-primary">Start</button>
+            <button id="callButton" class="btn btn-success">Call</button>
+            <button id="hangupButton" class="btn btn-danger">Hang Up</button>
             
           </td>
           <td>
