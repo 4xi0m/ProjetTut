@@ -35,17 +35,17 @@ function streamHandler(event)	{
 
 
 function askForHelpHandler()	{
-	console.log('Ask for help - Create room', 'C1');
+	console.log('Ask for help - Create room', client.name);
 	rtc.getUserMedia(function(stream)	{
 		attachMediaStream(localVideo, stream);
-		socket.emit('askForHelp', 'C1');
+		socket.emit('askForHelp', client);
 	});
 };
 
 
 
 function helpOfferedHandler(client){
-	console.log('Help accepted', client);
+	console.log('Help accepted', client.name);
 	rtc.createPeerConnection(streamHandler, iceCandidateHandler);
 	rtc.createOffer(function(sessionDescription)	{
 		socket.emit('RTCOffer', sessionDescription);

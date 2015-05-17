@@ -64,11 +64,6 @@ var userClass = require("./model/user.js");
 
 
 
-var pendingCalls = new Array();
-
-
-
-
 
 
 //
@@ -428,22 +423,21 @@ if(config_fields.secure_http){
 
 
 io = io.listen(unicServer);
-
+var pendingCalls = new Array();
 
 io.sockets.on('connection', function (socket){
 
 	var room = '';
-	var peersNumber = 0;
 
 
 	socket.on('askForHelp', function (client){
-		if(peersNumber == 0)	{
+		room = client.name;
+		if(pendingCalls[room] == undefined)	{
 			console.log('help asked');
-			room = client;					//	client = room name (md5(md5(client_mail) + timestamp))
-			peersNumber++;
-			pendingCalls.push(client);
+			client.full = false;
+			pendingCalls[room] = client;
 			socket.join(room);
-			socket.broadcast.emit('helpAsked', room);
+			socket.broadcast.emit('helpAsked', client);
 		}
 		else	{
 			console.log('Error : too many peers in the room');
@@ -453,12 +447,12 @@ io.sockets.on('connection', function (socket){
 
 
 	socket.on('help', function (client){
-		if(peersNumber == 1)	{
+		room = client.name;
+		if(pendingCalls[room].full == false)	{
 			console.log('help offered');
-			room = client;
-			peersNumber++;
 			socket.join(room);
 			socket.in(room).emit('helpOffered', room);
+			pendingCalls[room].full = true;
 		}
 		else	{
 			console.log('Error : the client is already helped by another operator');
@@ -491,7 +485,6 @@ io.sockets.on('connection', function (socket){
 	socket.on('stopConnection', function(e)	{
 		console.log('Session terminated');
 		room = '';
-		peersNumber = 0;
 		socket.in(room).emit('stopConnection');
 	});
 });

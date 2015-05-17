@@ -57,11 +57,11 @@ function insertClient(client)	{
 	var tr = document.createElement("tr");
 	var td = document.createElement("td");
 	var tdCall = document.createElement("td");
-	tdCall.innerHTML = "<button id=\""+client+"\">" + client + " - Help him</button>";
+	tdCall.innerHTML = "<button id=\""+client.name+"\">" + client.name + " - Help him</button>";
 	tr.appendChild(td);
 	tr.appendChild(tdCall);
 	table.appendChild(tr);
-	document.getElementById(client).onclick = function()	{offerHelpHandler(client)};
+	document.getElementById(client.name).onclick = function()	{offerHelpHandler(client)};
 }
 
 
