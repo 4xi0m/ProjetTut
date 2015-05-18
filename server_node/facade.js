@@ -435,7 +435,6 @@ io.sockets.on('connection', function (socket){
 		room = client.name;
 		if(pendingCalls[room] == undefined)	{
 			console.log('help asked');
-			client.full = false;
 			pendingCalls[room] = client;
 			socket.join(room);
 			socket.broadcast.emit('helpAsked', client);
@@ -449,15 +448,15 @@ io.sockets.on('connection', function (socket){
 
 	socket.on('help', function (client){
 		room = client.name;
-		if(pendingCalls[room].full == false)	{
+		if(pendingCalls[room] != undefined)	{
 			console.log('help offered');
+			delete(pendingCalls[room]);
 			socket.join(room);
 			socket.in(room).emit('helpOffered', room);
-			pendingCalls[room].full = true;
 			socket.broadcast.emit('helpOP', client);
 		}
 		else	{
-			console.log('Error : the client is already helped by another operator');
+			console.log('Error : no such pending call');
 		}
 	});
 
@@ -486,7 +485,7 @@ io.sockets.on('connection', function (socket){
 
 	socket.on('stopConnection', function(e)	{
 		console.log('Session terminated');
-		room = '';
 		socket.in(room).emit('stopConnection');
+		room = '';
 	});
 });

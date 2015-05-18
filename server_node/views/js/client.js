@@ -4,6 +4,8 @@ var rtc = new WebRTC();
 var localVideo = document.getElementById('localVideo');
 var remoteVideo = document.getElementById('remoteVideo');
 var helpButton = document.getElementById('help');
+var hangupButton = document.getElementById('hangupButton');
+hangupButton.disabled = true;
 
 
 
@@ -40,7 +42,7 @@ function askForHelpHandler()	{
 		attachMediaStream(localVideo, stream);
 		socket.emit('askForHelp', client);
 	});
-	document.getElementById('help').disabled = true;
+	helpButton.disabled = true;
 };
 
 
@@ -50,6 +52,7 @@ function helpOfferedHandler(client){
 	rtc.createPeerConnection(streamHandler, iceCandidateHandler);
 	rtc.createOffer(function(sessionDescription)	{
 		socket.emit('RTCOffer', sessionDescription);
+		hangupButton.disabled = false;
 	});
 }
 
@@ -62,4 +65,15 @@ helpButton.onclick = askForHelpHandler;
 socket.on('helpOffered', helpOfferedHandler);
 socket.on('RTCAnswer', rtc.processAnswer);
 socket.on('iceCandidate', rtc.addIceCandidate);
-socket.on('stopConnection', rtc.stop);
+socket.on('stopConnection', function()	{
+	helpButton.disabled = false;
+	hangupButton.disabled = true;
+	rtc.stop();
+});
+hangupButton.onclick = function()	{
+	rtc.stop();
+	socket.emit('stopConnection');
+	helpButton.disabled = false;
+	hangupButton.disabled = true;
+};
+socket.on('disconnect', rtc.stop);

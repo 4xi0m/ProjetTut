@@ -3,6 +3,7 @@ var rtc = new WebRTC();
 
 var localVideo = document.getElementById('localVideo');
 var remoteVideo = document.getElementById('remoteVideo');
+var hangup = document.getElementById('hangupSpace');
 
 
 
@@ -39,6 +40,12 @@ function offerHelpHandler(client)	{
 		rtc.createPeerConnection(streamHandler, iceCandidateHandler);
 		socket.emit('help', client);
 		removeClient(client);
+		hangup.innerHTML = "<button id=\"hangup\" class=\"btn btn-danger hangup\">Hang up</button>";
+		document.getElementById('hangup').onclick = function()	{
+			rtc.stop();
+			socket.emit('stopConnection');
+			document.getElementById('hangup').parentNode.removeChild(document.getElementById('hangup'));
+		};
 	});
 }
 
@@ -58,7 +65,7 @@ function insertClient(client)	{
 	var tr = document.createElement("tr");
 	var td = document.createElement("td");
 	var tdCall = document.createElement("td");
-	tdCall.innerHTML = "<button id=\""+client.name+"\">" + client.name + " - Help him</button>";
+	tdCall.innerHTML = "<button id=\""+client.name+"\" class=\"btn btn-success help\">" + client.name + " - Help him</button>";
 	tr.appendChild(td);
 	tr.appendChild(tdCall);
 	table.appendChild(tr);
@@ -75,9 +82,7 @@ function removeClient(client)	{
 
 function connectionHandler(pendingCalls)	{
 	for(var client in pendingCalls)	{
-		if(pendingCalls[client].full == false)	{
-			insertClient(pendingCalls[client]);
-		}
+		insertClient(pendingCalls[client]);
 	}
 }
 
@@ -87,6 +92,10 @@ window.onbeforeunload = rtc.stop;
 socket.on('helpAsked', insertClient);
 socket.on('iceCandidate', rtc.addIceCandidate);
 socket.on('RTCOffer', RTCOfferHandler);
-socket.on('stopConnection', rtc.stop);
+socket.on('stopConnection', function()	{
+	document.getElementById('hangup').parentNode.removeChild(document.getElementById('hangup'));
+	rtc.stop();
+});
 socket.on('connected', connectionHandler);
 socket.on('helpOP', removeClient);
+socket.on('disconnect', rtc.stop);
