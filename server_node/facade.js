@@ -423,11 +423,12 @@ if(config_fields.secure_http){
 
 
 io = io.listen(unicServer);
-var pendingCalls = new Array();
+var pendingCalls = {};
 
 io.sockets.on('connection', function (socket){
 
 	var room = '';
+	socket.emit('connected', pendingCalls)
 
 
 	socket.on('askForHelp', function (client){
@@ -453,6 +454,7 @@ io.sockets.on('connection', function (socket){
 			socket.join(room);
 			socket.in(room).emit('helpOffered', room);
 			pendingCalls[room].full = true;
+			socket.broadcast.emit('helpOP', client);
 		}
 		else	{
 			console.log('Error : the client is already helped by another operator');

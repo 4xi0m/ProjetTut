@@ -38,6 +38,7 @@ function offerHelpHandler(client)	{
 		attachMediaStream(localVideo, stream);
 		rtc.createPeerConnection(streamHandler, iceCandidateHandler);
 		socket.emit('help', client);
+		removeClient(client);
 	});
 }
 
@@ -66,8 +67,26 @@ function insertClient(client)	{
 
 
 
+function removeClient(client)	{
+	document.getElementById(client.name).parentNode.removeChild(document.getElementById(client.name));
+}
+
+
+
+function connectionHandler(pendingCalls)	{
+	for(var client in pendingCalls)	{
+		if(pendingCalls[client].full == false)	{
+			insertClient(pendingCalls[client]);
+		}
+	}
+}
+
+
+
 window.onbeforeunload = rtc.stop;
 socket.on('helpAsked', insertClient);
 socket.on('iceCandidate', rtc.addIceCandidate);
 socket.on('RTCOffer', RTCOfferHandler);
 socket.on('stopConnection', rtc.stop);
+socket.on('connected', connectionHandler);
+socket.on('helpOP', removeClient);

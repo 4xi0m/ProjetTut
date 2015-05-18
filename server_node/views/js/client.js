@@ -40,6 +40,7 @@ function askForHelpHandler()	{
 		attachMediaStream(localVideo, stream);
 		socket.emit('askForHelp', client);
 	});
+	document.getElementById('help').disabled = true;
 };
 
 
