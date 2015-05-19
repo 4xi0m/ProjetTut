@@ -180,11 +180,22 @@ module.exports.addStaff = addStaff;
 /**Store in the database finished calles
 example for datatime: 2015-05-13 12:00
 */
-function storeCallFinished (strUserId, strStaffId, strStartTime, strEndTime, strComment, strWaitTime, strLocation, send_response){
+//function storeCallFinished (strUserId, strStaffId, strStartTime, strEndTime, strComment, strWaitTime, strLocation, send_response){
+function storeCallFinished (call, send_response){
+
     var strQuery = "";
     var addedCall = null;
     var connection = db.createConnection(connectparam);
     connection.connect();
+
+    //get the value from the object in the parameters
+    strUserId = this.client;
+    strStaffId = this.staff;
+    strStartTime = this.startTime;
+    strEndTime = this.endTime;
+    strComment = commend;
+    strWaitTime = call.waitTime;
+    strLocation = call.location;
 
     //creating the query
     strpreQuery = "insert into CallRecord (start_time, user_id, comment, staff_id, end_time, location, wait_time)";
