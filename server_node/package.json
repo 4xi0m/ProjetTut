@@ -49,8 +49,8 @@
 		"mysql" : "*",
 		"node-static": "*",
 		"socket.io" : "*",
-		"jquery" : "*"
-		
+		"jquery" : "*",
+		"MD5" : "*"
 
 	}
 

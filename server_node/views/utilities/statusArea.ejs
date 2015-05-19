@@ -1,0 +1,30 @@
+<div id="statusArea">
+	<p>Everything is fine... for now !</p>
+</div>
+
+
+<script type="text/javascript">
+
+	function statusLog(text)	{
+		document.getElementById('statusArea').innerHTML = '<p>'+text+'</p>';
+	}
+
+</script>
+
+
+<style type="text/css">
+	#statusArea	{
+		width: 800px;
+		  height: 70px;
+		  margin: auto;
+		  background: rgb(30, 90, 100);
+		  border-radius: 10px;
+		  text-align: center;
+		  vertical-align: middle;
+	}
+
+	#statusArea p	{
+		line-height: 70px;
+		height: 70px;
+	}
+</style>

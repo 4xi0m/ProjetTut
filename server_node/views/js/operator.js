@@ -3,7 +3,7 @@ var rtc = new WebRTC();
 
 var localVideo = document.getElementById('localVideo');
 var remoteVideo = document.getElementById('remoteVideo');
-var hangup = document.getElementById('hangupSpace');
+var hangup = document.getElementById('hangupButton');
 
 
 
@@ -40,11 +40,12 @@ function offerHelpHandler(client)	{
 		rtc.createPeerConnection(streamHandler, iceCandidateHandler);
 		socket.emit('help', client);
 		removeClient(client);
-		hangup.innerHTML = "<button id=\"hangup\" class=\"btn btn-danger hangup\">Hang up</button>";
-		document.getElementById('hangup').onclick = function()	{
+		hangup.disabled = false;
+		hangup.onclick = function()	{
 			rtc.stop();
 			socket.emit('stopConnection');
-			document.getElementById('hangup').parentNode.removeChild(document.getElementById('hangup'));
+			hangup.disabled = true;
+			hangup.onclick = null;
 		};
 	});
 }
@@ -63,19 +64,18 @@ function RTCOfferHandler(sessionDescription)	 {
 function insertClient(client)	{
 	var table = document.getElementById('pendingCalls');
 	var tr = document.createElement("tr");
-	var td = document.createElement("td");
+	tr.id = 'tr'+client.name;
 	var tdCall = document.createElement("td");
 	tdCall.innerHTML = "<button id=\""+client.name+"\" class=\"btn btn-success help\">" + client.name + " - Help him</button>";
-	tr.appendChild(td);
 	tr.appendChild(tdCall);
-	table.appendChild(tr);
+	table.getElementsByTagName('tbody')[0].appendChild(tr);
 	document.getElementById(client.name).onclick = function()	{offerHelpHandler(client)};
 }
 
 
 
 function removeClient(client)	{
-	document.getElementById(client.name).parentNode.removeChild(document.getElementById(client.name));
+	document.getElementById('tr'+client.name).parentNode.removeChild(document.getElementById('tr'+client.name));
 }
 
 
@@ -93,7 +93,8 @@ socket.on('helpAsked', insertClient);
 socket.on('iceCandidate', rtc.addIceCandidate);
 socket.on('RTCOffer', RTCOfferHandler);
 socket.on('stopConnection', function()	{
-	document.getElementById('hangup').parentNode.removeChild(document.getElementById('hangup'));
+	hangup.disabled = true;
+	statusLog('The client hanged up !');
 	rtc.stop();
 });
 socket.on('connected', connectionHandler);

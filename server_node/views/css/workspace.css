@@ -1,6 +1,50 @@
-.test
+.remoteVideo
 {
-	color: red;
-	width: 30vw;
-	height : 30vh;
+	height: 40vh;
+	position: absolute;
+    top: 10vh;
+    bottom: 20vh;
+    left: 0;
+    right: 0;
+    margin: auto;
+
+}
+
+.localVideo
+{
+	height: 20vh;
+	width: 10vw;
+	position: absolute;
+    top:0;
+    bottom: -55vh;
+    left: 0;
+    right: 0;
+    margin: auto;
+    margin-left: auto;
+    background-color: black;
+}
+
+.hangup
+{
+	height: 8vh;
+	width: 20vw;
+	font-size: 4vh;
+	position: absolute;
+	bottom: 2vh;
+	left: 40vw;
+}
+
+
+#pendingCalls	{
+	height: 70vh;
+	width: 20vw;
+	position: absolute;
+	top: 20vh;
+	left: 5vw;
+}
+
+
+#pendingCalls tr	{
+	height: 50px;
+	display: block;
 }

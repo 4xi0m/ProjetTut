@@ -15,57 +15,30 @@
  
     <body class="bg-primary">
         <h2 class="text-center">Client : <%=client.name%> </h2>
-        
-        <button id='help' class="btn btn-success help">Help!</button>
+
+        <%- include utilities/statusArea.ejs%>
 
 
         <!--  CONFERENCE PART   -->
 
-            <video id="localVideo" class="localVideo"  autoplay></video>
 
-            <video id="remoteVideo" class="remoteVideo" autoplay></video>
+        <video id="remoteVideo" class="remoteVideo" autoplay></video>
+        <video id="localVideo" class="localVideo"  autoplay></video>
 
-            <button id="hangupButton" class="btn btn-danger hangup">Hang Up</button> 
 
+
+        <button id='help' class="btn btn-success help">Help!</button>
+        <button id="hangupButton" class="btn btn-danger hangup">Hang Up</button> 
+
+
+
+        <script src="js/model/user.js"></script>
         <script type="text/javascript">
-
-            function User (email, name){
-
-              this.email = email;
-              this.name = name;
-              this.id;
-
-            }
-
-
-
-            function Staff (email, name){
-              this.base = User;
-              this.base(email, name);
-              this.staff = true;
-
-            }
-            Staff.prototype = new User;
-            Staff.prototype.toString = function () {
-              return "Staff : "+ this.name;
-            };//methode toString
-
-
-
-            function Client (email,name){
-              this.base = User;
-              this.base(email, name);
-              this.client = true;
-
-            }
-            Client.prototype = new User; //héritage
-            Client.prototype.toString = function () {
-              return "Client : "+ this.name;
-            };//methode toString
-
-
-            var client = new Client('', '<%=(client.name)%>');
-
+            var client = new Client('<%=(client.email)%>',
+                                    '<%=(client.id)%>',
+                                    '<%=(client.name)%>',
+                                    '<%=(client.firstname)%>',
+                                    '<%=(client.creationDate)%>');
         </script>
         <script src="js/lib/adapter.js"></script>
         <script src="js/lib/socket.io.js"></script>

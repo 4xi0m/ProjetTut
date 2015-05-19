@@ -1,45 +1,45 @@
-.localVideo
+.remoteVideo
 {
-	height: 55vh;
+	height: 40vh;
 	position: absolute;
-    top:0;
+    top: 10vh;
     bottom: 20vh;
     left: 0;
     right: 0;
-     margin: auto;
+    margin: auto;
 
 }
 
-.remoteVideo
+.localVideo
 {
 	height: 20vh;
-	width: 35vw;
+	width: 10vw;
 	position: absolute;
     top:0;
-    bottom: -59vh;
+    bottom: -55vh;
     left: 0;
     right: 0;
-
     margin: auto;
+    margin-left: auto;
     background-color: black;
 }
 
 .hangup
 {
 	height: 8vh;
-	width: 40vw;
+	width: 20vw;
 	font-size: 4vh;
 	position: absolute;
 	bottom: 2vh;
-	left: 55vw;
+	left: 51vw;
 }
 
 .help
-{	
+{
 	height: 8vh;
-	width: 40vw;
+	width: 20vw;
 	font-size: 4vh;
 	position: absolute;
 	bottom: 2vh;
-	left: 5vw;
+	left: 29vw;
 }

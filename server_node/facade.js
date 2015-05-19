@@ -6,6 +6,7 @@ var colors = require('colors');
 var crypto = require("crypto");
 var app = express();
 var config_fields =require("./package.json").config;
+var md5 = require('MD5');
 
 
 
@@ -61,6 +62,7 @@ if(config_fields.data_base.connected){
 }
 
 var userClass = require("./model/user.js");
+var callClass = require("./model/call.js");
 
 
 
@@ -432,10 +434,10 @@ io.sockets.on('connection', function (socket){
 
 
 	socket.on('askForHelp', function (client){
-		room = client.name;
+		room = md5(client.name + md5(client.creationDate));
 		if(pendingCalls[room] == undefined)	{
 			console.log('help asked');
-			pendingCalls[room] = client;
+			pendingCalls[room] = new callClass.Call(null, null, client.id, null, null, null, null, null);
 			socket.join(room);
 			socket.broadcast.emit('helpAsked', client);
 		}
@@ -447,7 +449,7 @@ io.sockets.on('connection', function (socket){
 
 
 	socket.on('help', function (client){
-		room = client.name;
+		room = md5(client.name + md5(client.creationDate));
 		if(pendingCalls[room] != undefined)	{
 			console.log('help offered');
 			delete(pendingCalls[room]);

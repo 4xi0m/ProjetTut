@@ -5,7 +5,7 @@ var localVideo = document.getElementById('localVideo');
 var remoteVideo = document.getElementById('remoteVideo');
 var helpButton = document.getElementById('help');
 var hangupButton = document.getElementById('hangupButton');
-hangupButton.disabled = true;
+	hangupButton.disabled = true;
 
 
 
@@ -37,22 +37,24 @@ function streamHandler(event)	{
 
 
 function askForHelpHandler()	{
-	console.log('Ask for help - Create room', client.name);
+	console.log('Ask for help - Create room for client ', client.name);
 	rtc.getUserMedia(function(stream)	{
 		attachMediaStream(localVideo, stream);
 		socket.emit('askForHelp', client);
 	});
 	helpButton.disabled = true;
+	statusLog('Please wait, an operator will help you in a few seconds...');
 };
 
 
 
 function helpOfferedHandler(client){
-	console.log('Help accepted', client.name);
+	console.log('Help accepted ', client.name);
 	rtc.createPeerConnection(streamHandler, iceCandidateHandler);
 	rtc.createOffer(function(sessionDescription)	{
 		socket.emit('RTCOffer', sessionDescription);
 		hangupButton.disabled = false;
+		statusLog('Connection established !');
 	});
 }
 
@@ -68,6 +70,7 @@ socket.on('iceCandidate', rtc.addIceCandidate);
 socket.on('stopConnection', function()	{
 	helpButton.disabled = false;
 	hangupButton.disabled = true;
+	statusLog('The operator hanged up !');
 	rtc.stop();
 });
 hangupButton.onclick = function()	{
@@ -75,5 +78,6 @@ hangupButton.onclick = function()	{
 	socket.emit('stopConnection');
 	helpButton.disabled = false;
 	hangupButton.disabled = true;
+	statusLog('Connection terminated !');
 };
 socket.on('disconnect', rtc.stop);
