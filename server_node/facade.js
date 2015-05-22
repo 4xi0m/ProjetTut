@@ -426,6 +426,7 @@ if(config_fields.secure_http){
 
 io = io.listen(unicServer);
 var pendingCalls = {};
+var treatedCalls = {};
 
 io.sockets.on('connection', function (socket){
 
@@ -434,12 +435,12 @@ io.sockets.on('connection', function (socket){
 
 
 	socket.on('askForHelp', function (client){
-		room = md5(client.name + md5(client.creationDate));
+		room = md5(client.name + md5(Math.floor((Math.random() * 100) + 1)));
 		if(pendingCalls[room] == undefined)	{
 			console.log('help asked');
-			pendingCalls[room] = new callClass.Call(null, null, client.id, null, null, null, null, null);
+			pendingCalls[room] = {name: client.name, room: room};
 			socket.join(room);
-			socket.broadcast.emit('helpAsked', client);
+			socket.broadcast.emit('helpAsked', {name: client.name, room: room});
 		}
 		else	{
 			console.log('Error : too many peers in the room');
@@ -449,9 +450,11 @@ io.sockets.on('connection', function (socket){
 
 
 	socket.on('help', function (client){
-		room = md5(client.name + md5(client.creationDate));
+		room = client.room;
+		console.log(room);
 		if(pendingCalls[room] != undefined)	{
 			console.log('help offered');
+			treatedCalls[room] = new callClass.Call(null, null, pendingCalls[room].id, null, null, null, null, null);
 			delete(pendingCalls[room]);
 			socket.join(room);
 			socket.in(room).emit('helpOffered', room);
@@ -488,6 +491,7 @@ io.sockets.on('connection', function (socket){
 	socket.on('stopConnection', function(e)	{
 		console.log('Session terminated');
 		socket.in(room).emit('stopConnection');
+		storeCallFinished(treatedCalls[room]);
 		room = '';
 	});
 });
