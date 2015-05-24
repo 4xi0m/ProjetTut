@@ -13,22 +13,20 @@
 .localVideo
 {
 	height: 20vh;
-	width: 10vw;
 	position: absolute;
-    top:0;
-    bottom: -55vh;
+    top:55vh;
+    bottom:0;
     left: 0;
     right: 0;
     margin: auto;
     margin-left: auto;
-    background-color: black;
 }
 
 .hangup
 {
 	height: 8vh;
 	width: 20vw;
-	font-size: 4vh;
+	font-size: 4vmin;
 	position: absolute;
 	bottom: 2vh;
 	left: 51vw;
@@ -38,8 +36,9 @@
 {
 	height: 8vh;
 	width: 20vw;
-	font-size: 4vh;
+	font-size: 4vmin;
 	position: absolute;
 	bottom: 2vh;
 	left: 29vw;
 }
+

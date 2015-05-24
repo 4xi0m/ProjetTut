@@ -1,9 +1,27 @@
+/*.container{
+    background-color: black;
+    width: 100vw;
+}*/
+
+
 .form-control
 {
 	height: 8vh;
 	font-size: 4vh;
 	width: 100%;
 }
+
+/*.form-horizontal
+{
+    background-color: red;
+    width: 100vw;
+}
+
+.form-group
+{
+    width: 100vw;
+    background-color: green;
+}*/
 
 .logo
 {
@@ -12,11 +30,10 @@
 }
 
 
-
 .btn
  {
  	height: 8vh;
- 	width: 40vw;
+ 	width: 44vw;
  	font-size: 4vh;
  	background: transparent;
 	color: #F2F2F2;
@@ -24,16 +41,17 @@
  }
 
 .connection{ 
-	width: 90%;
+	width: 90vw;
 	height: 0px;
 	position: absolute;
-    top:10%;
+    top:13vh;
     bottom: 0;
     left: 0;
     right: 0;
 
      margin: auto;
 }
+
 
 .coordonnees{ 
 	width: 90%;
@@ -65,11 +83,14 @@
 	width: 90%;
 	height: 0px;
 	position: absolute;
-    top:75%;
+    top:72%;
     bottom: 0;
     left: 0;
     right: 0;
 
      margin: auto;
 }
+
+
+
 
