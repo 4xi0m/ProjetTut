@@ -35,6 +35,7 @@
 
         <script src="js/model/user.js"></script>
         <script type="text/javascript">
+            var user = {nb: '<%=(user.nb)%>', pass: '<%=(user.pass)%>'};
             var client = new Client('<%=(client.email)%>',
                                     '<%=(client.id)%>',
                                     '<%=(client.name)%>',

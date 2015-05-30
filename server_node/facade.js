@@ -63,6 +63,7 @@ if(config_fields.data_base.connected){
 
 var userClass = require("./model/user.js");
 var callClass = require("./model/call.js");
+var users = [];
 
 
 
@@ -314,8 +315,11 @@ app.post("/addOpperator", function (req, res){
 //	Staff workspace page
 app.get("/work_space", StaffIsAuthenticated, function (req, res, next){
 	var staff_member = req.session.user;
+	var userID = md5(Math.floor((Math.random() * 100) + 1));
+	users[users.length] = userID;
 	res.render("views/work_space",{
-		staff_member : staff_member
+		staff_member : staff_member,
+		user: {nb: users.length-1, pass: userID}
 	});
 });
 
@@ -324,8 +328,11 @@ app.get("/work_space", StaffIsAuthenticated, function (req, res, next){
 //	Client page 
 app.get("/help", ClientIsAuthenticated, function (req, res, next){
 	var client = req.session.user;
+	var userID = md5(Math.floor((Math.random() * 100) + 1));
+	users[users.length] = userID;
 	res.render("views/help",{
-		client : client
+		client : client,
+		user: {nb: users.length-1, pass: userID}
 	});
 });
 
@@ -431,37 +438,41 @@ var treatedCalls = {};
 io.sockets.on('connection', function (socket){
 
 	var room = '';
-	socket.emit('connected', pendingCalls)
+	socket.emit('connected', pendingCalls);
 
 
-	socket.on('askForHelp', function (client){
-		room = md5(client.name + md5(Math.floor((Math.random() * 100) + 1)));
-		if(pendingCalls[room] == undefined)	{
-			console.log('help asked');
-			pendingCalls[room] = {name: client.name, room: room};
-			socket.join(room);
-			socket.broadcast.emit('helpAsked', {name: client.name, room: room});
-		}
-		else	{
-			console.log('Error : too many peers in the room');
+	socket.on('askForHelp', function (client, user){
+		if(user.pass == users[user.nb])	{
+			room = md5(client.name + md5(Math.floor((Math.random() * 100) + 1)));
+			if(pendingCalls[room] == undefined)	{
+				console.log('help asked');
+				pendingCalls[room] = {name: client.name, room: room};
+				socket.join(room);
+				socket.broadcast.emit('helpAsked', {name: client.name, room: room});
+			}
+			else	{
+				console.log('Error : too many peers in the room');
+			}
 		}
 	});
 
 
 
-	socket.on('help', function (client){
-		room = client.room;
-		console.log(room);
-		if(pendingCalls[room] != undefined)	{
-			console.log('help offered');
-			treatedCalls[room] = new callClass.Call(null, null, pendingCalls[room].id, null, null, null, null, null);
-			delete(pendingCalls[room]);
-			socket.join(room);
-			socket.in(room).emit('helpOffered', room);
-			socket.broadcast.emit('helpOP', client);
-		}
-		else	{
-			console.log('Error : no such pending call');
+	socket.on('help', function (client, user){
+		if(user.pass == users[user.nb])	{
+			room = client.room;
+			console.log(room);
+			if(pendingCalls[room] != undefined)	{
+				console.log('help offered');
+				treatedCalls[room] = new callClass.Call(null, null, pendingCalls[room].id, null, null, null, null, null);
+				delete(pendingCalls[room]);
+				socket.join(room);
+				socket.in(room).emit('helpOffered', room);
+				socket.broadcast.emit('helpOP', client);
+			}
+			else	{
+				console.log('Error : no such pending call');
+			}
 		}
 	});
 

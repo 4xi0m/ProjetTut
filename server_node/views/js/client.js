@@ -40,7 +40,7 @@ function askForHelpHandler()	{
 	console.log('Ask for help - Create room for client ', client.name);
 	rtc.getUserMedia(function(stream)	{
 		attachMediaStream(localVideo, stream);
-		socket.emit('askForHelp', client);
+		socket.emit('askForHelp', client, user);
 	});
 	helpButton.disabled = true;
 	statusLog('Please wait, an operator will help you in a few seconds...');
