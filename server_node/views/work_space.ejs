@@ -4,16 +4,16 @@
     <meta charset="utf-8" />
     <title>OPERATOR</title>
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-     <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="css/workspace.css" type="text/css">
 
   </head>
   <body class="bg-primary">
-        <h2 class="text-center">Agent : <%=staff_member.name%> </h2>
+        <h2 class="text-center">Agent : Alice </h2>
 
         <%- include utilities/statusArea.ejs%>
 
@@ -32,6 +32,7 @@
 
         <!--  LIST OF PENDING CALLS -->
         <table class="table" id="pendingCalls">
+          <h5 style="margin-left: 5vw;">Pending calls</h5>
           <tbody>
           </tbody>
         </table>

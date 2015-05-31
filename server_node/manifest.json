@@ -1,10 +1,9 @@
 {
-  "name": "WRTC",
+  "name": "Hey",
   "description": "WebRTC client",
   "version": "0.0.1",
-  "app": {
-    "launch": {
-      "local_path": "views/home_page.ejs"
-    }
-  }
+  "start_url": "http://localhost:8000",
+  "xwalk_hosts": [
+  	"http://192.168.173.1"
+  ]
 }
