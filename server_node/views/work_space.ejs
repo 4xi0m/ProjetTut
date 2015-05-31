@@ -37,7 +37,10 @@
         </table>
 
 
-
+        <script type="text/javascript">
+            var user = {nb: '<%=(user.nb)%>', pass: '<%=(user.pass)%>'};
+            console.log(user.nb + ", " + user.pass);
+        </script>
         <script src="js/lib/adapter.js"></script>
         <script src="js/lib/socket.io.js"></script>
         <script src="js/webRTC.js"></script>        

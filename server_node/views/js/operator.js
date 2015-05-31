@@ -38,7 +38,7 @@ function offerHelpHandler(client)	{
 	rtc.getUserMedia(function(stream)	{
 		attachMediaStream(localVideo, stream);
 		rtc.createPeerConnection(streamHandler, iceCandidateHandler);
-		socket.emit('help', client);
+		socket.emit('help', client, user);
 		removeClient(client);
 		hangup.disabled = false;
 		hangup.onclick = function()	{
